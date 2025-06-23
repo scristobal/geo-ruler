@@ -1,0 +1,38 @@
+[package]
+name = "geo-ruler"
+version = "0.1.0"
+edition = "2024"
+description = "HyperTwoBits cardinality estimation algorithm"
+license = "MIT"
+authors = ["Samuel Cristobal <https://github.com/scristobal>"]
+repository = "https://github.com/scristobal/geo-ruler"
+
+[[example]]
+name = "distance"
+
+[[example]]
+name = "interpolate"
+
+[[example]]
+name = "mars"
+
+[[test]]
+name = "properties"
+
+[[bench]]
+name = "ruler"
+harness = false
+
+[dependencies]
+geo = "0.30.0"
+num-traits = "0.2.19"
+
+[dev-dependencies]
+approx = "0.5.1"
+criterion = "0.5.1"
+proptest = "1.7.0"
+
+[features]
+default = [] # use Rust std atan implementation by default
+atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan
+atan2_deg5 = []  # When enabled, use a fast and less accurate degree 5 polynomial approximation of atan
