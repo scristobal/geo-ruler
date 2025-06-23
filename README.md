@@ -6,8 +6,8 @@ This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#
 
 ## Features
 
-- Implements all of the [geo-rs](https://docs.rs/geo/latest/geo/) traits for metrics spaces using generic `Float` types at zero cost abstractions
-- Locally-flat Earth approximation with latitude-dependent scaling, 20-100x faster than traditional methods like Haversine or Vincenty's formulas with typically < 0.1% error for distances up to 500 km
+- Implements most common [operations on metrics spaces](https://docs.rs/geo/latest/geo/#operations-on-metric-spaces) using generic `Float` types at zero cost abstractions
+- Uses a locally-flat Earth approximation with latitude-dependent scaling, 20-100x faster than traditional methods like Haversine or Vincenty's formulas with typically < 0.1% error for distances up to 500 km
 - Local formulas use the [WGS84 ellipsoidal model](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS_84), but also supports other elliptical models, such as GRS80, or even other celestial bodies.
 - Different approximate algorithms for `atan2` computations can be optionally enabled using cargo features
 - Comprehensive test suite, property invariants and correctness verification against [Karney (2013) Geodesic model](https://arxiv.org/pdf/1109.4448.pdf) using fuzz testing.
@@ -91,10 +91,10 @@ This approach is significantly faster than traditional methods like Haversine or
 
 This library extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by implementing the following traits:
 
-- [`Distance`](https://docs.rs/geo/latest/geo/trait.Distance.html)
-- [`Bearing`](https://docs.rs/geo/latest/geo/trait.Bearing.html)
-- [`Destination`](https://docs.rs/geo/latest/geo/trait.Destination.html)
-- [`InterpolatePoint`](https://docs.rs/geo/latest/geo/trait.InterpolatePoint.html)
+- [`Distance`](https://docs.rs/geo/latest/geo/algorithm/line_measures/trait.Distance.html)
+- [`Bearing`](https://docs.rs/geo/latest/geo/algorithm/line_measures/trait.Bearing.html)
+- [`Destination`](https://docs.rs/geo/latest/geo/algorithm/line_measures/trait.Destination.html)
+- [`InterpolatePoint`](https://docs.rs/geo/latest/geo/algorithm/line_measures/trait.InterpolatePoint.html)
 
 ### Cargo Features
 
@@ -116,4 +116,4 @@ For high-precision global-scale calculations, consider using the full Geodesic i
 
 ### License
 
-MIT License
+MIT

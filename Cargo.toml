@@ -2,7 +2,9 @@
 name = "geo-ruler"
 version = "0.1.0"
 edition = "2024"
-description = "HyperTwoBits cardinality estimation algorithm"
+description = "A fast, city-scale geodesic approximation library for geo-rs crate based on Mapbox's Cheap Ruler algorithm."
+keywords = ["geo", "geodesic", "gis", "cheap-ruler", "mapbox"]
+categories = ["science::geo"]
 license = "MIT"
 authors = ["Samuel Cristobal <https://github.com/scristobal>"]
 repository = "https://github.com/scristobal/geo-ruler"
