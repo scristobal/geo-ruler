@@ -216,8 +216,10 @@ impl<F: CoordFloat> Destination<F> for Ruler<F> {
     fn destination(&self, origin: Point<F>, bearing: F, distance: F) -> Point<F> {
         let [kx, ky] = self.coefs(origin.y());
 
-        let x = origin.x() + distance * bearing.to_radians().sin() / kx;
-        let y = origin.y() + distance * bearing.to_radians().cos() / ky;
+        let (sin, cos) = bearing.to_radians().sin_cos();
+
+        let x = origin.x() + distance * sin / kx;
+        let y = origin.y() + distance * cos / ky;
 
         point! { x: x, y: y}
     }
