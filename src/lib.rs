@@ -39,11 +39,12 @@
 //! - `atan2_deg3`: Use a 3rd degree polynomial approximation (faster but less accurate)
 //! - `atan2_deg5`: Use a 5th degree polynomial approximation (better accuracy with slight performance cost)
 //!
-//! Without any features, the standard `atan2` implementation from Rust's standard library is used.
+//! Without any features, Rust's default `atan2` implementation is used.
+#![no_std]
 
+use core::marker::PhantomData;
 use geo::{Bearing, CoordFloat, Destination, Distance, InterpolatePoint, Point, point};
 use num_traits::FloatConst;
-use std::marker::PhantomData;
 
 #[cfg(any(feature = "atan2_deg3", feature = "atan2_deg5"))]
 mod atan;
@@ -302,7 +303,7 @@ impl<F: CoordFloat + FloatConst> Bearing<F> for Ruler<F> {
     ///
     /// The implementation used depends on the feature flags enabled:
     /// - With `atan2_deg3` or `atan2_deg5`: Uses the optimized implementation from the `atan` module
-    /// - Without features: Uses the standard library `atan2` implementation
+    /// - Without features: Uses Rust's default `atan2` implementation
     fn bearing(&self, origin: Point<F>, destination: Point<F>) -> F {
         let [kx, ky] = self.coefs_avg(origin.y(), destination.y());
 
@@ -621,23 +622,36 @@ mod test {
         let flatiron = point!(x: -73.9897, y: 40.7411);
         let max_distance = 100.;
 
-        let points = Ruler::WGS84
-            .points_along_line(empire_state, flatiron, max_distance, false)
-            .collect::<Vec<_>>();
+        let mut points =
+            Ruler::WGS84.points_along_line(empire_state, flatiron, max_distance, false);
 
-        assert!(!points.is_empty());
+        let Some(mut prev) = points.next() else {
+            panic!("points is empty");
+        };
 
-        assert!(!points.contains(&empire_state));
-        assert!(!points.contains(&flatiron));
+        let mut found_empire_state = prev == empire_state;
+        let mut found_flatiron = prev == flatiron;
 
-        for pair in points.windows(2) {
-            let distance = Geodesic.distance(pair[0], pair[1]);
+        for curr in points {
+            let distance = Geodesic.distance(prev, curr);
+
+            if curr == empire_state {
+                found_empire_state = true;
+            }
+
+            if curr == flatiron {
+                found_flatiron = true;
+            }
+
+            prev = curr;
 
             assert!(
                 distance < max_distance
                     || relative_eq!(distance, max_distance, max_relative = RELATIVE_ERROR),
             )
         }
+
+        assert!(!found_flatiron && !found_empire_state);
     }
 
     #[test]
@@ -646,21 +660,35 @@ mod test {
         let flatiron = point!(x: -73.9897, y: 40.7411);
         let max_distance = 100.;
 
-        let points = Ruler::WGS84
-            .points_along_line(empire_state, flatiron, max_distance, true)
-            .collect::<Vec<_>>();
+        let mut points = Ruler::WGS84.points_along_line(empire_state, flatiron, max_distance, true);
 
-        assert_eq!(points.first(), Some(empire_state).as_ref());
-        assert_eq!(points.last(), Some(flatiron).as_ref());
+        let Some(mut prev) = points.next() else {
+            panic!("points is empty");
+        };
 
-        for pair in points.windows(2) {
-            let distance = Geodesic.distance(pair[0], pair[1]);
+        let mut found_empire_state = prev == empire_state;
+        let mut found_flatiron = prev == flatiron;
+
+        for curr in points {
+            let distance = Geodesic.distance(prev, curr);
+
+            if curr == empire_state {
+                found_empire_state = true;
+            }
+
+            if curr == flatiron {
+                found_flatiron = true;
+            }
+
+            prev = curr;
 
             assert!(
                 distance < max_distance
                     || relative_eq!(distance, max_distance, max_relative = RELATIVE_ERROR),
             )
         }
+
+        assert!(found_flatiron && found_empire_state);
     }
 
     #[test]

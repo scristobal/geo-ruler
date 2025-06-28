@@ -1,9 +1,8 @@
 //! This module provides alternative implementations of the atan2 function to optimize performance.
 //!
-//! The standard `atan2` function from Rust's standard library is precise but can be
-//! computationally expensive. This module offers faster polynomial approximations that
-//! are suitable for applications where maximum performance is desired and small errors
-//! are acceptable.
+//! The Rust's default `atan2` function is precise but can be computationally expensive.
+//! This module offers faster polynomial approximations that are suitable for applications
+//! where maximum performance is desired and small errors are acceptable.
 //!
 //! Two implementations are available:
 //! - `atan2_deg3`: A 3rd degree polynomial approximation that is faster but less accurate (typical error < 0.1 rad)
@@ -14,7 +13,7 @@
 //! - `atan2_deg3`
 //! - `atan2_deg5`
 //!
-//! If neither feature is enabled, the standard atan2 implementation from Rust's standard library is used.
+//! If neither feature is enabled, Rust's default `atan2` implementation is used.
 //!
 //! # Usage
 //!
@@ -22,14 +21,13 @@
 //! the corresponding feature flag is enabled.
 
 use geo::CoordFloat;
-#[cfg(any(feature = "atan2_deg3", feature = "atan2_deg5"))]
 use num_traits::FloatConst;
 
 /// Fast 3rd degree polynomial approximation of the atan2 function.
 ///
 /// This implementation uses a simplified polynomial approximation to calculate
 /// the arctangent of two values. It offers significantly better performance compared
-/// to the standard implementation (potentially 2-3x faster), at the cost of accuracy.
+/// to more precise implementations (potentially 2-3x faster), at the cost of accuracy.
 ///
 /// The maximum error is approximately 0.1 radians (~5.7 degrees) with typical errors
 /// much smaller for common angle values.
@@ -46,7 +44,7 @@ use num_traits::FloatConst;
 /// # See Also
 ///
 /// - [`atan2` with `atan2_deg5` flag](#method.atan2-1): Higher precision approximation
-/// - Standard library `atan2`: Maximum precision, used when no feature flags are enabled
+/// - Rust's default `atan2`: Maximum precision, used when no feature flags are enabled
 #[cfg(feature = "atan2_deg3")]
 pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
     let pi_4 = F::FRAC_PI_4();
@@ -72,9 +70,9 @@ pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
 ///
 /// This implementation uses a 5th degree polynomial to calculate the arctangent of two values.
 /// It offers better accuracy than the 3rd degree version while maintaining good performance
-/// (typically 1.5-2x faster than standard library implementation).
+/// (typically 1.5-2x faster than more precise implementations).
 ///
-/// The maximum error is approximately 0.01 radians (~0.57 degrees) with typical errors
+///gThe maximum error is approximately 0.01 radians (~0.57 degrees) with typical errors
 /// much smaller for common angle values. This makes it suitable for most practical applications
 /// where the small precision trade-off is acceptable for improved performance.
 ///
@@ -94,7 +92,7 @@ pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
 /// # See Also
 ///
 /// - [`atan2` with `atan2_deg3` flag](#method.atan2-2): Faster but less accurate approximation
-/// - Standard library `atan2`: Maximum precision, used when no feature flags are enabled
+/// - Rust's Default `atan2`: Maximum precision, used when no feature flags are enabled
 #[cfg(feature = "atan2_deg5")]
 pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
     let abs_y = y.abs();

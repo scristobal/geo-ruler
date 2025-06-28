@@ -35,6 +35,6 @@ criterion = "0.5.1"
 proptest = "1.7.0"
 
 [features]
-default = [] # use Rust std atan implementation by default
+default = [] # uses default `atan2` implementation
 atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan
 atan2_deg5 = []  # When enabled, use a fast and less accurate degree 5 polynomial approximation of atan
