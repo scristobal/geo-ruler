@@ -125,6 +125,8 @@ macro_rules! bench_all_ops {
             $distance,
             $include_ends
         );
+
+        group.finish();
     }};
 }
 
@@ -150,5 +152,5 @@ pub fn benchmark(c: &mut Criterion) {
     bench_new_york!(c, "rhumb", &Rhumb);
 }
 
-criterion_group!(benches, benchmark,);
+criterion_group!(benches, benchmark);
 criterion_main!(benches);

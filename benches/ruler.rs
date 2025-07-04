@@ -30,7 +30,9 @@ pub fn benchmark(c: &mut Criterion) {
             b.iter(|| ruler.destination(black_box(x), black_box(a), black_box(d)));
         },
     );
+
+    g.finish();
 }
 
-criterion_group!(benches, benchmark,);
+criterion_group!(benches, benchmark);
 criterion_main!(benches);

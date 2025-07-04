@@ -57,7 +57,7 @@ use num_traits::FloatConst;
 /// Based on [Mapbox's Cheap Ruler](https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016).
 pub struct RulerMeasure<F: CoordFloat>(CheapRuler<F>);
 
-impl<F: CoordFloat + FloatConst> RulerMeasure<F> {
+impl<F: CoordFloat + FloatConst + MaybeFromf32> RulerMeasure<F> {
     /// Creates a new `Ruler` with custom ellipsoid parameters.
     ///
     /// This method allows you to create a ruler for measuring distances on planets
@@ -122,7 +122,7 @@ impl<F: CoordFloat + FloatConst + From<f32>> Default for RulerMeasure<F> {
     }
 }
 
-impl<F: CoordFloat + FloatConst> Destination<F> for RulerMeasure<F> {
+impl<F: CoordFloat + FloatConst + MaybeFromf32> Destination<F> for RulerMeasure<F> {
     /// Returns a new point having traveled the given distance along the given bearing from origin.
     ///
     /// This uses the Cheap Ruler approximation which is fast but best suited for
@@ -160,7 +160,9 @@ impl<F: CoordFloat + FloatConst> Destination<F> for RulerMeasure<F> {
     }
 }
 
-impl<F: CoordFloat + FloatConst> Distance<F, Point<F>, Point<F>> for RulerMeasure<F> {
+impl<F: CoordFloat + FloatConst + MaybeFromf32> Distance<F, Point<F>, Point<F>>
+    for RulerMeasure<F>
+{
     /// Calculates the distance between two points using the Cheap Ruler approximation.
     ///
     /// This method is optimized for performance and is best suited for distances

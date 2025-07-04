@@ -30,13 +30,18 @@ name = "props"
 required-features = ["geo"]
 
 [[bench]]
+name = "ruler"
+harness = false
+
+[[bench]]
 name = "geo"
 harness = false
 required-features = ["geo"]
 
 [[bench]]
-name = "ruler"
+name = "math"
 harness = false
+required-features = ["atan2_deg3"]
 
 [dependencies]
 geo = { version = "0.30.0", optional = true }

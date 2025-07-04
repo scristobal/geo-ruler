@@ -33,21 +33,21 @@
 
 #![no_std]
 
+mod constants;
+
 #[cfg(feature = "wasm")]
 mod wasm;
 
 #[cfg(any(feature = "atan2_deg3", feature = "atan2_deg5"))]
-mod atan;
+pub mod math;
 
 #[cfg(feature = "geo")]
 pub mod geo;
 
+use constants::{WGS84_E2, WGS84_RE};
 use core::convert::From;
 use core::fmt::Debug;
 use num_traits::{Float, FloatConst};
-
-const RE: f32 = 6_378_137.; // WGS84 semi-major axis in meters
-const E2: f32 = 0.006_694_38; // WGS84 eccentricity squared
 
 /// A fast geodesic approximation calculator using latitude-dependent scaling.
 ///
@@ -68,8 +68,8 @@ impl<T: Float + FloatConst + Debug + From<f32>> CheapRuler<T> {
     #[allow(non_snake_case)]
     pub fn WGS84() -> CheapRuler<T> {
         CheapRuler {
-            re: RE.into(),
-            e2: E2.into(),
+            re: WGS84_RE.into(),
+            e2: WGS84_E2.into(),
         }
     }
 }
@@ -104,12 +104,12 @@ impl<T: Float + FloatConst + Debug> CheapRuler<T> {
     /// - `kx`: The longitude scaling factor (converts longitude degrees to meters)
     /// - `ky`: The latitude scaling factor (converts latitude degrees to meters)
     fn coefs(&self, origin: &[T; 2]) -> [T; 2] {
-        let clat = origin[1].to_radians().cos();
+        let c = origin[1].to_radians().cos();
 
-        let w = T::one() / (T::one() - self.e2 * (T::one() - clat.powi(2)));
+        let w = T::one() / (T::one() - self.e2 * (T::one() - c.powi(2)));
         let k = w.sqrt() * self.re.to_radians();
 
-        let kx = k * clat;
+        let kx = k * c;
         let ky = k * w * (T::one() - self.e2);
 
         [kx, ky]
@@ -203,6 +203,6 @@ impl<T: Float + FloatConst + Debug + MaybeFromf32> CheapRuler<T> {
         return dx.atan2(dy).to_degrees();
 
         #[cfg(any(feature = "atan2_deg5", feature = "atan2_deg3"))]
-        return atan::atan2(dx, dy).to_degrees();
+        return math::atan2(dx, dy).to_degrees();
     }
 }
