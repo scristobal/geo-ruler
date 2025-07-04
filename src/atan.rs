@@ -6,8 +6,7 @@
 //!
 //! Two implementations are available:
 //! - `atan2_deg3`: A 3rd degree polynomial approximation that is faster but less accurate (typical error < 0.1 rad)
-//! - `atan2_deg5`: A 5th degree polynomial approximation that offers better accuracy (typical error < 0.01 rad)
-//!  with a small performance cost
+//! - `atan2_deg5`: A 5th degree polynomial approximation that offers better accuracy (typical error < 0.01 rad) with a small performance cost
 //!
 //! These implementations can be used by enabling the corresponding feature flags:
 //! - `atan2_deg3`
@@ -20,8 +19,7 @@
 //! These optimized implementations are automatically used by the `bearing` method when
 //! the corresponding feature flag is enabled.
 
-use geo::CoordFloat;
-use num_traits::FloatConst;
+use num_traits::{Float, FloatConst};
 
 /// Fast 3rd degree polynomial approximation of the atan2 function.
 ///
@@ -46,18 +44,21 @@ use num_traits::FloatConst;
 /// - [`atan2` with `atan2_deg5` flag](#method.atan2-1): Higher precision approximation
 /// - Rust's default `atan2`: Maximum precision, used when no feature flags are enabled
 #[cfg(feature = "atan2_deg3")]
-pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
+pub fn atan2<F: Float + FloatConst + From<f32>>(y: F, x: F) -> F {
+    let a1: F = 0.9817f32.into();
+    let a3: F = 0.1963f32.into();
+
     let pi_4 = F::FRAC_PI_4();
 
     let abs_y = y.abs();
 
     let (r, a) = if x < F::zero() {
-        ((x + abs_y) / (abs_y - x), F::from(3.0).unwrap() * pi_4)
+        ((x + abs_y) / (abs_y - x), pi_4 + pi_4 + pi_4)
     } else {
         ((x - abs_y) / (x + abs_y), pi_4)
     };
 
-    let mut res = a + (F::from(0.1963).unwrap() * r * r - F::from(0.9817).unwrap()) * r;
+    let mut res = a + (a3 * r * r - a1) * r;
 
     if y < F::zero() {
         res = -res;
@@ -94,7 +95,7 @@ pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
 /// - [`atan2` with `atan2_deg3` flag](#method.atan2-2): Faster but less accurate approximation
 /// - Rust's Default `atan2`: Maximum precision, used when no feature flags are enabled
 #[cfg(feature = "atan2_deg5")]
-pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
+pub fn atan2<F: Float + FloatConst + From<f32>>(y: F, x: F) -> F {
     let abs_y = y.abs();
     let abs_x = x.abs();
 
@@ -106,10 +107,10 @@ pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
     ///
     /// Uses polynomial coefficients from "Approximations for digital computers" by Cecil Hastings
     /// and Horner's method for optimal polynomial evaluation
-    fn raw_atan_5<G: CoordFloat>(x: G) -> G {
-        let a1 = G::from(0.995354).unwrap();
-        let a3 = G::from(-0.288679).unwrap();
-        let a5 = G::from(0.079331).unwrap();
+    fn raw_atan_5<G: Float + From<f32>>(x: G) -> G {
+        let a1: G = (0.995354f32).into();
+        let a3: G = (-0.288679f32).into();
+        let a5: G = (0.079331f32).into();
 
         let x_sq = x * x;
         x * (a1 + x_sq * (a3 + x_sq * a5))
@@ -136,18 +137,18 @@ pub fn atan2<F: CoordFloat + FloatConst>(y: F, x: F) -> F {
 ///
 /// This function is included for reference and potential future use. It offers even higher
 /// precision than the 5th degree polynomial (error < 0.001 radians) but at a higher
-/// computational cost. It is currently not exposed in the public API.
+/// computational cost.
 ///
 /// Polynomial coefficients from "Approximations for digital computers" by Cecil Hastings
 /// and Horner's method for optimal polynomial evaluation
 #[allow(dead_code)]
-fn _raw_atan_11<F: CoordFloat>(x: F) -> F {
-    let a1 = F::from(0.99997726).unwrap();
-    let a3 = F::from(-0.33262347).unwrap();
-    let a5 = F::from(0.19354346).unwrap();
-    let a7 = F::from(-0.11643287).unwrap();
-    let a9 = F::from(0.05265332).unwrap();
-    let a11 = F::from(-0.01172120).unwrap();
+fn _raw_atan_11<F: Float + From<f32>>(x: F) -> F {
+    let a1: F = 0.99997726f32.into();
+    let a3: F = (-0.33262347f32).into();
+    let a5: F = 0.19354346f32.into();
+    let a7: F = (-0.11643287f32).into();
+    let a9: F = 0.05265332f32.into();
+    let a11: F = (-0.0117212_f32).into();
 
     let x_sq = x * x;
     x * (a1 + x_sq * (a3 + x_sq * (a5 + x_sq * (a7 + x_sq * (a9 + x_sq * a11)))))

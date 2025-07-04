@@ -284,13 +284,14 @@ dependencies = [
 
 [[package]]
 name = "geo-ruler"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "approx",
  "criterion",
  "geo",
  "num-traits",
  "proptest",
+ "wasm-bindgen",
 ]
 
 [[package]]

@@ -2,7 +2,7 @@
 //! using the fast Ruler implementation, which is optimized for city-scale distances.
 
 use geo::{Distance, point};
-use geo_ruler::Ruler;
+use geo_ruler::geo::RulerMeasure;
 
 fn main() {
     // Define our two landmarks on Mars (longitude, latitude in degrees)
@@ -16,7 +16,7 @@ fn main() {
 
     // Create a Ruler instance for Mars using its equatorial and polar radii
     // This allows us to calculate distances on the Martian surface accurately
-    let mars_ruler = Ruler::new(mars_equatorial_radius, mars_polar_radius);
+    let mars_ruler = RulerMeasure::new(mars_equatorial_radius, mars_polar_radius);
 
     // Calculate the distance between the two points using the Mars Ruler instance
     let distance = mars_ruler.distance(olympus_mons, karzok_crater);

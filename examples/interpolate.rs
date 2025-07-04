@@ -2,7 +2,7 @@
 //! along a line between two landmarks in New York City using the Ruler.
 
 use geo::{InterpolatePoint, point};
-use geo_ruler::Ruler;
+use geo_ruler::geo::RulerMeasure;
 
 fn main() {
     // Define our two landmarks in New York City (longitude, latitude in degrees)
@@ -14,7 +14,7 @@ fn main() {
 
     // Generate points along the line with maximum 100m between each point
     // The last parameter (true) means we'll include both the start and end points
-    let points = Ruler::WGS84
+    let points = RulerMeasure::WGS84()
         .points_along_line(empire_state, flat_iron, distance, true)
         .collect::<Vec<_>>();
 
