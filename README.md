@@ -12,8 +12,11 @@ This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#
 - Different approximate algorithms for `atan2` computations can be optionally enabled using cargo features
 - Comprehensive test suite, property invariants, and correctness verification against [Karney (2013) Geodesic model](https://arxiv.org/pdf/1109.4448.pdf) using fuzz testing
 - No heap allocations and `#![no_std]`. However, the [geo](https://crates.io/crates/geo) crate does require `std`
+- Optional WebAssembly bindings for use from JavaScript
 
 ## Examples
+
+### From Rust using the `geo` crate
 
 Calculate distance between two landmarks:
 
@@ -49,6 +52,47 @@ fn main() {
 
     println!("Generated {} points along the path", points.len());
 }
+```
+
+### From JavaScript using WebAssembly
+
+This library includes WebAssembly bindings, if the `wasm` feature is enabled. To use it from JavaScript, you'll need to build the WebAssembly module:
+
+```bash
+# Install wasm-pack if you haven't already
+cargo install wasm-pack
+
+# Build the WebAssembly module
+wasm-pack build --target web --out-dir pkg
+```
+
+Then use it in your JavaScript code:
+
+```javascript
+import init, { Coords } from './pkg/geo_ruler.js';
+
+async function main() {
+    // Initialize the WebAssembly module
+    await init();
+
+    // Create coordinate points
+    const empireState = new Coords(-73.9857, 40.7484);
+    const flatiron = new Coords(-73.9897, 40.7411);
+
+    // Calculate distance in meters
+    const distance = empireState.distance(flatiron);
+    console.log(`Distance: ${distance.toFixed(1)} meters`);
+
+    // Calculate bearing in degrees
+    const bearing = empireState.bearing(flatiron);
+    console.log(`Bearing: ${bearing.toFixed(1)} degrees`);
+
+    // Calculate destination point
+    const destination = empireState.destination(bearing, distance);
+    console.log(`Destination: ${destination.x}, ${destination.y}`);
+}
+
+main();
 ```
 
 ## Performance
