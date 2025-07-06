@@ -791,6 +791,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "simd-ruler"
+version = "0.1.0"
+dependencies = [
+ "approx",
+ "criterion",
+ "geo-ruler",
+]
+
+[[package]]
 name = "smallvec"
 version = "1.15.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"

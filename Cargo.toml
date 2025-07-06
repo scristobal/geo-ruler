@@ -1,3 +1,7 @@
+[workspace]
+resolver = "3"
+members = ["simd"]
+
 [package]
 name = "geo-ruler"
 version = "0.2.0"
@@ -55,7 +59,7 @@ proptest = "1.7.0"
 
 
 [features]
-default = ["geo", "wasm", "atan2_deg3"] # uses default `atan2` implementation
+default = ["geo", "wasm"] # uses default `atan2` implementation
 wasm = ["dep:wasm-bindgen"] # When enabled, generate Web Assembly bindings
 geo = ["dep:geo"] # When enabled, include geo.rs trait implementations
 atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan

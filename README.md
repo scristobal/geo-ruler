@@ -13,6 +13,7 @@ This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#
 - Comprehensive test suite, property invariants, and correctness verification against [Karney (2013) Geodesic model](https://arxiv.org/pdf/1109.4448.pdf) using fuzz testing
 - No heap allocations and `#![no_std]`. However, the [geo](https://crates.io/crates/geo) crate does require `std`
 - Optional WebAssembly bindings for use from JavaScript
+- Experimental `simd-ruler` crate with SIMD-accelerated implementations of common aggregated geodesic operations, eg. length of a polyline.
 
 ## Examples
 
