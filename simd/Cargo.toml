@@ -1,0 +1,20 @@
+[package]
+name = "simd-ruler"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["rlib"]
+
+[[bench]]
+name = "simd"
+harness = false
+
+[[test]]
+name = "length"
+
+[dev-dependencies]
+geo-ruler = { path = ".."}
+criterion = "0.5.1"
+approx = "0.5.1"
+

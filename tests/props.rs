@@ -12,17 +12,17 @@
 use approx::relative_eq;
 use geo::Geodesic;
 use geo::{Bearing, Destination, Distance, point};
-use geo_ruler::Ruler;
+use geo_ruler::geo::RulerMeasure;
 use proptest::prelude::*;
 
 const RELATIVE_ERROR: f64 = 0.01;
 
 proptest! {
     #[test]
-    fn distance_arguments_are_symmetric(distance in 100f64..1000., bearing in 0f64..360.) {
+    fn distance_arguments_are_symmetric(distance in 10f64..1_000., bearing in 0f64..360.) {
         let empire_state = point!(x: -73.9857, y: 40.7484);
 
-        let ruler = Ruler::WGS84;
+        let ruler = RulerMeasure::WGS84();
 
         let destination = ruler.destination(empire_state, bearing, distance);
 
@@ -35,7 +35,7 @@ proptest! {
     fn destination_is_an_involutory_function(distance in 100f64..1000., bearing in 0f64..360.) {
         let empire_state = point!(x: -73.9857, y: 40.7484);
 
-        let ruler = Ruler::WGS84;
+        let ruler = RulerMeasure::WGS84();
 
         let destination = ruler.destination(empire_state, bearing, distance);
 
@@ -48,11 +48,11 @@ proptest! {
     }
 
     #[test]
-    fn distance_is_precise(distance in 100f64..1000., bearing in 0f64..360.) {
+    fn distance_is_precise(distance in 10f64..1_000., bearing in 0f64..360.) {
         let empire_state = point!(x: -73.9857, y: 40.7484);
         let target = Geodesic.destination(empire_state, bearing, distance);
 
-        let ruler = Ruler::WGS84;
+        let ruler = RulerMeasure::WGS84();
 
         let error = (ruler.distance(empire_state, target) - distance).abs();
 
@@ -64,7 +64,7 @@ proptest! {
         let empire_state = point!(x: -73.9857, y: 40.7484);
         let target = Geodesic.destination(empire_state, bearing, distance);
 
-        let ruler = Ruler::WGS84;
+        let ruler = RulerMeasure::WGS84();
 
         let error = (ruler.bearing(empire_state, target) - bearing).rem_euclid(360.);
 
@@ -79,7 +79,7 @@ proptest! {
 
         let target = Geodesic.destination(empire_state, bearing, distance);
 
-        let ruler = Ruler::WGS84;
+        let ruler = RulerMeasure::WGS84();
 
         let destination = ruler.destination(empire_state, bearing, distance);
 

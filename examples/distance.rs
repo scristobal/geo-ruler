@@ -2,7 +2,7 @@
 //! using the fast Ruler implementation, which is optimized for city-scale distances.
 
 use geo::{Distance, point};
-use geo_ruler::Ruler;
+use geo_ruler::geo::RulerMeasure;
 
 fn main() {
     // Define our two landmarks in New York City (longitude, latitude in degrees)
@@ -11,7 +11,7 @@ fn main() {
 
     // Calculate the distance between the two points using the WGS84 ellipsoid model
     // The Ruler implementation provides fast approximation suitable for city-scale distances
-    let distance = Ruler::WGS84.distance(empire_state, flatiron);
+    let distance = RulerMeasure::WGS84().distance(empire_state, flatiron);
 
     println!("Distance from Empire State Building to Flatiron Building: {distance:.1} meters");
 }

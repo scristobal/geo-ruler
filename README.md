@@ -2,7 +2,7 @@
 
 A fast, city-scale geodesic approximation library for [geo-rs](https://docs.rs/geo/latest/geo/) based on [Mapbox's Cheap Ruler algorithm](https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016).
 
-This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#metric-spaces) (namely `Geodesic`, `Haversine` and `Rhumb`) with a new `Ruler` measure that prioritizes performance over precision while maintaining acceptable accuracy for most city-scale applications.
+This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#metric-spaces) (namely `Geodesic`, `Haversine` and `Rhumb`) with a new `RulerMeasure` measure that prioritizes performance over precision while maintaining acceptable accuracy for most city-scale applications.
 
 ## Features
 
@@ -12,21 +12,25 @@ This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#
 - Different approximate algorithms for `atan2` computations can be optionally enabled using cargo features
 - Comprehensive test suite, property invariants, and correctness verification against [Karney (2013) Geodesic model](https://arxiv.org/pdf/1109.4448.pdf) using fuzz testing
 - No heap allocations and `#![no_std]`. However, the [geo](https://crates.io/crates/geo) crate does require `std`
+- Optional WebAssembly bindings for use from JavaScript
+- Experimental `simd-ruler` crate with SIMD-accelerated implementations of common aggregated geodesic operations, eg. length of a polyline.
 
 ## Examples
+
+### From Rust using the `geo` crate
 
 Calculate distance between two landmarks:
 
 ```rust
 use geo::{point, Distance};
-use geo_ruler::Ruler;
+use geo_ruler::geo::RulerMeasure;
 
 fn main() {
     let empire_state = point!(x: -73.9857, y: 40.7484);
     let flatiron = point!(x: -73.9897, y: 40.7411);
 
     // Calculate distance in meters
-    let distance = Ruler::WGS84.distance(empire_state, flatiron);
+    let distance = RulerMeasure::WGS84().distance(empire_state, flatiron);
 
     println!("Distance: {:.1} meters", distance);
 }
@@ -36,19 +40,60 @@ Generate points along a path:
 
 ```rust
 use geo::{point, InterpolatePoint};
-use geo_ruler::Ruler;
+use geo_ruler::geo::RulerMeasure;
 
 fn main() {
     let empire_state = point!(x: -73.9857, y: 40.7484);
     let flatiron = point!(x: -73.9897, y: 40.7411);
 
     // Generate points with maximum 50m between each point
-    let points = Ruler::WGS84
+    let points = RulerMeasure::WGS84()
         .points_along_line(empire_state, flatiron, 50.0, true)
         .collect::<Vec<_>>();
 
     println!("Generated {} points along the path", points.len());
 }
+```
+
+### From JavaScript using WebAssembly
+
+This library includes WebAssembly bindings, if the `wasm` feature is enabled. To use it from JavaScript, you'll need to build the WebAssembly module:
+
+```bash
+# Install wasm-pack if you haven't already
+cargo install wasm-pack
+
+# Build the WebAssembly module
+wasm-pack build --target web --out-dir pkg
+```
+
+Then use it in your JavaScript code:
+
+```javascript
+import init, { Coords } from './pkg/geo_ruler.js';
+
+async function main() {
+    // Initialize the WebAssembly module
+    await init();
+
+    // Create coordinate points
+    const empireState = new Coords(-73.9857, 40.7484);
+    const flatiron = new Coords(-73.9897, 40.7411);
+
+    // Calculate distance in meters
+    const distance = empireState.distance(flatiron);
+    console.log(`Distance: ${distance.toFixed(1)} meters`);
+
+    // Calculate bearing in degrees
+    const bearing = empireState.bearing(flatiron);
+    console.log(`Bearing: ${bearing.toFixed(1)} degrees`);
+
+    // Calculate destination point
+    const destination = empireState.destination(bearing, distance);
+    console.log(`Destination: ${destination.x}, ${destination.y}`);
+}
+
+main();
 ```
 
 ## Performance
@@ -57,16 +102,16 @@ Geo Ruler is optimized for high performance at the cost of accuracy, especially 
 
 Below are benchmark results comparing Geo Ruler against the other geo-rs implementations:
 
-| Operation            | Ruler (atan2_deg3) | Ruler (atan2_deg5) | Ruler (default) | Geodesic   | Haversine | Rhumb     |
-|----------------------|--------------------|--------------------|-----------------|------------|-----------|-----------|
-| Distance             | 6.17 ns            | 6.19 ns            | 6.17 ns         | 402.61 ns  | 16.35 ns  | 21.31 ns  |
-| Bearing              | 8.51 ns            | 10.30 ns           | 19.79 ns        | 405.20 ns  | 25.06 ns  | 31.38 ns  |
-| Destination          | 9.14 ns            | 9.12 ns            | 9.11 ns         | 206.43 ns  | 48.95 ns  | 33.21 ns  |
-| Interpolate Distance | 25.57 ns           | 28.52 ns           | 37.08 ns        | 629.54 ns  | 84.33 ns  | 90.63 ns  |
-| Interpolate Ratio    | 0.96 ns            | 0.96 ns            | 0.99 ns         | 647.79 ns  | 90.97 ns  | 89.71 ns  |
-| Interpolate Along    | 10.85 ns           | 10.85 ns           | 10.85 ns        | 2160.50 ns | 349.33 ns | 348.23 ns |
+| Operation            | RulerMeasure (atan2_deg3) | RulerMeasure (atan2_deg5) | RulerMeasure (default) | Geodesic   | Haversine | Rhumb     |
+|----------------------|---------------------------|---------------------------|------------------------|------------|-----------|-----------|
+| Distance             | 6.17 ns                   | 6.19 ns                   | 6.17 ns                | 402.61 ns  | 16.35 ns  | 21.31 ns  |
+| Bearing              | 8.51 ns                   | 10.30 ns                  | 19.79 ns               | 405.20 ns  | 25.06 ns  | 31.38 ns  |
+| Destination          | 9.14 ns                   | 9.12 ns                   | 9.11 ns                | 206.43 ns  | 48.95 ns  | 33.21 ns  |
+| Interpolate Distance | 25.57 ns                  | 28.52 ns                  | 37.08 ns               | 629.54 ns  | 84.33 ns  | 90.63 ns  |
+| Interpolate Ratio    | 0.96 ns                   | 0.96 ns                   | 0.99 ns                | 647.79 ns  | 90.97 ns  | 89.71 ns  |
+| Interpolate Along    | 10.85 ns                  | 10.85 ns                  | 10.85 ns               | 2160.50 ns | 349.33 ns | 348.23 ns |
 
-Note: `default` refers to Rust's default `atan2` implementation, whilst `atan2_deg3` and `atan2_deg5` refer to the polynomial approximations provided by this crate. See the [Cargo Features](#cargo-features) section for more details on these options.
+Note: `default` refers to Rust's default `atan2` implementation (when neither `atan2_deg3` nor `atan2_deg5` features are enabled), whilst `atan2_deg3` and `atan2_deg5` refer to the polynomial approximations provided by this crate. See the [Cargo Features](#cargo-features) section for more details on these options.
 
 ### Warning
 
@@ -99,11 +144,14 @@ This library extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by 
 
 ### Cargo Features
 
-This library supports multiple implementations of the `atan2` function to calculate bearing:
+This library supports multiple implementations of the `atan2` function to calculate bearing and additional features:
 
-- **`default`**: Uses Rust's default `atan2` implementation, e.g., `sys::std` unless `#![feature(core_float_math)]` is active
-- **`atan2_deg3`**: Uses a faster, 3rd degree polynomial approximation of `atan2`
-- **`atan2_deg5`**: Uses a faster, 5th degree polynomial approximation of `atan2`
+- **`geo`**: Integration with the geo-rs crate ecosystem (enabled by default)
+- **`wasm`**: WebAssembly bindings for JavaScript interop (enabled by default)
+- **`atan2_deg3`**: Use a very fast and inaccurate 3rd degree polynomial approximation of `atan2` (enabled by default)
+- **`atan2_deg5`**: Use a fast and less accurate 5th degree polynomial approximation of `atan2`
+
+Note: When neither `atan2_deg3` nor `atan2_deg5` is enabled, Rust's default `atan2` implementation is used.
 
 ### Limitations
 

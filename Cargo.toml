@@ -1,40 +1,66 @@
+[workspace]
+resolver = "3"
+members = ["simd"]
+
 [package]
 name = "geo-ruler"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
-description = "A fast, city-scale geodesic approximation library for geo-rs crate based on Mapbox's Cheap Ruler algorithm."
-keywords = ["geo", "geodesic", "gis", "cheap-ruler", "mapbox"]
+description = "A fast, city-scale geodesic approximation library based on Mapbox's Cheap Ruler algorithm."
+keywords = ["gis", "geo", "cheap-ruler", "mapbox"]
 categories = ["science::geo"]
 license = "MIT"
 authors = ["Samuel Cristobal <https://github.com/scristobal>"]
 repository = "https://github.com/scristobal/geo-ruler"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
+
 [[example]]
 name = "distance"
+required-features = ["geo"]
 
 [[example]]
 name = "interpolate"
+required-features = ["geo"]
 
 [[example]]
 name = "mars"
+required-features = ["geo"]
+
 
 [[test]]
-name = "properties"
+name = "props"
+required-features = ["geo"]
 
 [[bench]]
 name = "ruler"
 harness = false
 
+[[bench]]
+name = "geo"
+harness = false
+required-features = ["geo"]
+
+[[bench]]
+name = "math"
+harness = false
+required-features = ["atan2_deg3"]
+
 [dependencies]
-geo = "0.30.0"
+geo = { version = "0.30.0", optional = true }
 num-traits = "0.2.19"
+wasm-bindgen = { version = "0.2.100", optional = true }
 
 [dev-dependencies]
 approx = "0.5.1"
 criterion = "0.5.1"
 proptest = "1.7.0"
 
+
 [features]
-default = [] # uses default `atan2` implementation
+default = ["geo", "wasm"] # uses default `atan2` implementation
+wasm = ["dep:wasm-bindgen"] # When enabled, generate Web Assembly bindings
+geo = ["dep:geo"] # When enabled, include geo.rs trait implementations
 atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan
 atan2_deg5 = []  # When enabled, use a fast and less accurate degree 5 polynomial approximation of atan
