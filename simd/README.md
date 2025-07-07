@@ -34,7 +34,8 @@ let longitudes = [-73.9857, -73.9897, -73.9927];
 let latitudes = [40.7484, 40.7411, 40.7394];
 let points = [&longitudes[..], &latitudes[..]];
 
-let distance = length(&points); // Returns meters
+// compute the total length in chunks of size 2
+let distance = length::<2>(&points); // Returns meters
 ```
 
 Ensure you're using a nightly Rust toolchain:

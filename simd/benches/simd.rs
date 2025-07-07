@@ -1,6 +1,6 @@
 #![feature(iter_map_windows)]
 
-use criterion::{criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, criterion_group, criterion_main};
 use geo_ruler::CheapRuler;
 use simd_ruler;
 use std::hint::black_box;
@@ -25,7 +25,8 @@ fn generate_test_data(size: usize) -> Vec<[f32; 2]> {
 }
 
 pub fn benchmark(c: &mut Criterion) {
-    let data = generate_test_data(1_000 * 4 + 1);
+    // prime number of data points, not divisible by any number of lanes
+    let data = generate_test_data(1019);
 
     let mut g = c.benchmark_group("simd");
 
@@ -35,7 +36,7 @@ pub fn benchmark(c: &mut Criterion) {
     let points = [&lats[..], &lons[..]];
 
     g.bench_with_input("length", &points, |b, points| {
-        b.iter(|| simd_ruler::length(black_box(points)))
+        b.iter(|| simd_ruler::length::<4>(black_box(points)))
     });
 
     g.finish();

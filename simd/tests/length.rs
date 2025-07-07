@@ -13,7 +13,7 @@ fn test_simd_length_basic() {
 
     let points = [&lons[..], &lats[..]];
 
-    let simd_length = simd_ruler::length(&points);
+    let simd_length = simd_ruler::length::<4>(&points);
 
     let ruler = CheapRuler::WGS84();
 
