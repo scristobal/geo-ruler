@@ -66,26 +66,25 @@ pub fn length(points: &[&[f32]; 2]) -> f32 {
 
     let num_chunks = (n - 1) / 4;
 
-    for i in 0..num_chunks {
-        let offset = i * 4;
+    for offset in (0..num_chunks).step_by(4) {
         let origins = unsafe { [read(points[0], offset), read(points[1], offset)] };
         let destinations = unsafe { [read(points[0], 1 + offset), read(points[1], 1 + offset)] };
 
         total_length += distance(&origins, &destinations).reduce_sum();
     }
 
-    let offset = num_chunks * 4;
     let remaining_pairs = (n - 1) % 4;
 
     if remaining_pairs > 0 {
+        let offset = num_chunks * 4;
         let origins = [load(&points[0], offset), load(&points[1], offset)];
         let destinations = [load(&points[0], offset + 1), load(&points[1], offset + 1)];
 
-        total_length += distance(&origins, &destinations)
-            .as_array()
-            .into_iter()
-            .take(remaining_pairs)
-            .sum::<f32>();
+        let mask = mask32x4::from_bitmask((1 << remaining_pairs) - 1);
+
+        total_length += mask
+            .select(distance(&origins, &destinations), f32x4::splat(0.0))
+            .reduce_sum();
     }
 
     total_length
