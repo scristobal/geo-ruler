@@ -178,21 +178,24 @@ where
 
     let abs_y = y.abs();
 
-    let mut res = Simd::<f32, N>::splat(FRAC_PI_4);
-    let mut r = (x - abs_y) / (x + abs_y);
+    let res = Simd::<f32, N>::splat(FRAC_PI_4);
+    let r = (x - abs_y) / (x + abs_y);
 
-    if x < Simd::<f32, N>::splat(0.) {
-        res += Simd::<f32, N>::splat(FRAC_PI_2);
-        r = Simd::<f32, N>::splat(-1.) / r;
-    };
+    // if x < Simd::<f32, N>::splat(0.) {
+    //     res += Simd::<f32, N>::splat(FRAC_PI_2);
+    //     r = Simd::<f32, N>::splat(-1.) / r;
+    // };
+    let mask = x.simd_lt(Simd::<f32, N>::splat(0.));
+    let mut res = mask.select(res + Simd::<f32, N>::splat(FRAC_PI_2), res);
+    let r = mask.select(Simd::<f32, N>::splat(-1.) / r, r);
 
     res += r * (a1 + a3 * r * r);
 
-    if y < Simd::<f32, N>::splat(0.) {
-        res = -res;
-    }
-
-    res
+    // if y < Simd::<f32, N>::splat(0.) {
+    //     res = -res;
+    // }
+    let mask = y.simd_lt(Simd::<f32, N>::splat(0.));
+    mask.select(-res, res)
 }
 
 #[inline(always)]
@@ -210,15 +213,15 @@ where
 
     // reduce to [0, π/2] using symmetry
 
-    let mut sign = Simd::<f32, N>::splat(1.);
-
+    //  let mut sign = Simd::<f32, N>::splat(1.);
+    //
     //  if x > Simd::<f32, N>::splat(PI) {
     //      x = x - Simd::<f32, N>::splat(PI);
     //      sign = -sign;
     //  }
     mask = x.simd_gt(Simd::<f32, N>::splat(PI));
     x = mask.select(x - Simd::<f32, N>::splat(PI), x);
-    sign = mask.select(sign, -sign);
+    let mut sign = mask.select(Simd::<f32, N>::splat(1.), Simd::<f32, N>::splat(-1.));
 
     // if x > Simd::<f32, N>::splat(FRAC_PI_2) {
     //     x = Simd::<f32, N>::splat(PI) - x;
