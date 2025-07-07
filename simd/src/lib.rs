@@ -38,7 +38,11 @@ unsafe fn read<const N: usize>(s: &[f32], offset: usize) -> Simd<f32, N>
 where
     LaneCount<N>: SupportedLaneCount,
 {
-    unsafe { std::ptr::read(s.as_ptr().add(offset) as *const Simd<f32, N>) }
+    #[cfg(target_arch = "aarch64")]
+    return unsafe { std::ptr::read(s.as_ptr().add(offset) as *const Simd<f32, N>) };
+
+    #[cfg(not(target_arch = "aarch64"))]
+    return load(s, offset);
 }
 
 #[inline(always)]
