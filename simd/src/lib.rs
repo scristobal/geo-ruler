@@ -113,8 +113,6 @@ where
     total_length
 }
 
-// TODO: fn length<const N: usize>(points: &[&[f32,N]; 2]) -> f32 {}
-
 #[inline(always)]
 fn distance<const N: usize>(
     origin: &[Simd<f32, N>; 2],
@@ -203,28 +201,39 @@ where
     LaneCount<N>: SupportedLaneCount,
 {
     // reduce to [0, 2π) using periodicity
-    if x < Simd::<f32, N>::splat(0.) {
-        x = x + Simd::<f32, N>::splat(2. * PI);
-    }
+
+    // if x < Simd::<f32, N>::splat(0.) {
+    //     x = x + Simd::<f32, N>::splat(2. * PI);
+    // }
+    let mut mask = x.simd_lt(Simd::<f32, N>::splat(0.));
+    x = mask.select(x + Simd::<f32, N>::splat(2. * PI), x);
 
     // reduce to [0, π/2] using symmetry
+
     let mut sign = Simd::<f32, N>::splat(1.);
 
-    if x > Simd::<f32, N>::splat(PI) {
-        x = x - Simd::<f32, N>::splat(PI);
-        sign = -sign;
-    }
+    //  if x > Simd::<f32, N>::splat(PI) {
+    //      x = x - Simd::<f32, N>::splat(PI);
+    //      sign = -sign;
+    //  }
+    mask = x.simd_gt(Simd::<f32, N>::splat(PI));
+    x = mask.select(x - Simd::<f32, N>::splat(PI), x);
+    sign = mask.select(sign, -sign);
 
-    if x > Simd::<f32, N>::splat(FRAC_PI_2) {
-        x = Simd::<f32, N>::splat(PI) - x;
-        sign = -sign;
-    }
+    // if x > Simd::<f32, N>::splat(FRAC_PI_2) {
+    //     x = Simd::<f32, N>::splat(PI) - x;
+    //     sign = -sign;
+    // }
+    mask = x.simd_gt(Simd::<f32, N>::splat(FRAC_PI_2));
+    x = mask.select(Simd::<f32, N>::splat(PI) - x, x);
+    sign = mask.select(-sign, sign);
 
     // 4th degree Chebyshev approximation polynomial approximation for cos(x) on [0, π/2]
     let a0 = Simd::<f32, N>::splat(1.);
     let a2 = Simd::<f32, N>::splat(-0.4999999);
     let a4 = Simd::<f32, N>::splat(0.04166368);
 
+    // Horner method for polynomial evaluation
     let x_sq = x * x;
     sign * (a0 + x_sq * (a2 + x_sq * a4))
 }
