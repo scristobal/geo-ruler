@@ -1,5 +1,3 @@
-#![feature(iter_map_windows)]
-
 use criterion::{Criterion, criterion_group, criterion_main};
 use geo_ruler::CheapRuler;
 use simd_ruler;
@@ -36,7 +34,7 @@ pub fn benchmark(c: &mut Criterion) {
     let points = [&lats[..], &lons[..]];
 
     g.bench_with_input("length", &points, |b, points| {
-        b.iter(|| simd_ruler::length::<4>(black_box(points)))
+        b.iter(|| simd_ruler::length(black_box(points)))
     });
 
     g.finish();
@@ -49,10 +47,14 @@ pub fn benchmark(c: &mut Criterion) {
 
     g.bench_with_input("length", &points, |b, points| {
         b.iter(|| {
-            black_box(points)
-                .iter()
-                .map_windows(|[p, q]| ruler.distance(p, q))
-                .sum::<f32>()
+            let points = black_box(points);
+            let mut distance = 0.;
+
+            for i in 1..points.len() {
+                distance += ruler.distance(points[i - 1], points[i])
+            }
+
+            distance
         })
     });
 

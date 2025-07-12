@@ -1,5 +1,3 @@
-#![feature(iter_map_windows)]
-
 use approx::assert_relative_eq;
 use geo_ruler::CheapRuler;
 use simd_ruler;
@@ -13,7 +11,7 @@ fn test_simd_length_basic() {
 
     let points = [&lons[..], &lats[..]];
 
-    let simd_length = simd_ruler::length::<4>(&points);
+    let simd_length = simd_ruler::length(&points);
 
     let ruler = CheapRuler::WGS84();
 
@@ -23,10 +21,11 @@ fn test_simd_length_basic() {
         .map(|(&lon, &lat)| [lon, lat])
         .collect();
 
-    let reference_length = points
-        .iter()
-        .map_windows(|[p, q]| ruler.distance(p, q))
-        .sum::<f32>();
+    let mut reference_length = 0.;
+
+    for i in 1..points.len() {
+        reference_length += ruler.distance(&points[i - 1], &points[i])
+    }
 
     assert_relative_eq!(simd_length, reference_length, max_relative = RELATIVE_ERROR);
 }
