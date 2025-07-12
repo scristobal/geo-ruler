@@ -2,26 +2,25 @@
 
 High-performance SIMD-accelerated geographic calculations for Rust.
 
-A vectorized geospatial library that processes multiple coordinate pairs simultaneously using Rust's portable SIMD, achieving significant performance improvements over iterative approaches.
+A vectorized geospatial library that processes multiple coordinate pairs simultaneously using the `wide` crate, achieving significant performance improvements over iterative approaches.
 
 ## Features
 
-- **SIMD Vectorization**: Processes multiple coordinate pairs simultaneously
-- **Backwards Compatible**: If SIMD is not available, it falls back to a standard iterative implementation
-- **No External Dependencies**: Pure Rust implementation with no external crates required
+- **SIMD Vectorization**: Processes multiple coordinate pairs simultaneously using the `wide` crate
+- **Cross-platform**: Works on stable Rust across different architectures
+- **Minimal Dependencies**: Uses only the `wide` crate for SIMD operations
 
 ## Requirements
 
-⚠️ **Requires nightly Rust toolchain** due to unstable [`portable_simd`](https://doc.rust-lang.org/std/simd/index.html) feature.
+- **Stable Rust toolchain** - no nightly required
+- Compatible with various CPU architectures through the `wide` crate
 
 ## Performance
 
-Benchmarked on Apple MacBook Pro M1 Pro:
+Benchmarked on Intel i9-11900K running Linux 6.15.5-arch1-1:
 
-- **SIMD**: 7.93 µs
-- **Iterative**: 22.45 µs
-
-An approximate **speedup** of ~2.8x
+- **vectorized**: 524.93 ns
+- **scalar**: 6.86 µs
 
 ## Usage
 
@@ -34,15 +33,16 @@ let longitudes = [-73.9857, -73.9897, -73.9927];
 let latitudes = [40.7484, 40.7411, 40.7394];
 let points = [&longitudes[..], &latitudes[..]];
 
-// compute the total length in chunks of size 2
-let distance = length::<2>(&points); // Returns meters
+let distance = length(&points); // Returns meters
 ```
 
-Ensure you're using a nightly Rust toolchain:
+## Installation
 
-```bash
-rustup toolchain install nightly
-rustup default nightly
+Add this to your `Cargo.toml`:
+
+```toml
+[dependencies]
+simd-ruler = "0.1.0"
 ```
 
 ## License
