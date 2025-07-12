@@ -4,7 +4,7 @@ members = ["simd"]
 
 [package]
 name = "geo-ruler"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2024"
 description = "A fast, city-scale geodesic approximation library based on Mapbox's Cheap Ruler algorithm."
 keywords = ["gis", "geo", "cheap-ruler", "mapbox"]
@@ -59,7 +59,7 @@ proptest = "1.7.0"
 
 
 [features]
-default = ["geo", "wasm", "atan2_deg3"] 
+default = ["geo", "wasm", "atan2_deg3"]
 wasm = ["dep:wasm-bindgen"] # When enabled, generate Web Assembly bindings
 geo = ["dep:geo"] # When enabled, include geo.rs trait implementations
 atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan

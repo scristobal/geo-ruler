@@ -17,12 +17,10 @@ A vectorized geospatial library that processes multiple coordinate pairs simulta
 
 ## Performance
 
-Benchmarked on Apple MacBook Pro M1 Pro:
+Benchmarked on Intel i9-11900K running Linux 6.15.5-arch1-1:
 
-- **SIMD**: 7.93 µs
-- **Iterative**: 22.45 µs
-
-An approximate **speedup** of ~2.8x
+- **vectorized**: 524.93 ns
+- **scalar**: 6.86 µs
 
 ## Usage
 
