@@ -75,7 +75,7 @@ pub fn length(points: &[&[f32]; 2]) -> f32 {
     let n = points[0].len();
 
     if n < 2 {
-        return 0.0;
+        return 0.;
     }
 
     let mut total_length = 0.;
@@ -89,19 +89,18 @@ pub fn length(points: &[&[f32]; 2]) -> f32 {
         total_length += distance(&origins, &destinations).reduce_add();
     }
 
-    let remaining_pairs = (n - 1) % N;
+    // sum remaining pairs, if any
+    let rem_pairs = (n - 1) % N;
 
-    if remaining_pairs > 0 {
+    if rem_pairs > 0 {
         let offset = num_chunks * N;
         let origins = unsafe { [read(&points[0], offset), read(&points[1], offset)] };
         let destinations = unsafe { [read(&points[0], 1 + offset), read(&points[1], 1 + offset)] };
 
-        // sum only the remaining pairs
-        let n = (1 << remaining_pairs) - 1;
-        let mask = f32x4::splat(n as f32).cmp_gt(f32x4::new([0., 1., 2., 3.]));
+        let mask = f32x4::splat(rem_pairs as f32).cmp_gt(f32x4::new([0., 1., 2., 3.]));
 
         total_length += mask
-            .blend(distance(&origins, &destinations), f32x4::splat(0.0))
+            .blend(distance(&origins, &destinations), f32x4::splat(0.))
             .reduce_add();
     }
 
