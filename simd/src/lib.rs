@@ -31,7 +31,7 @@ where
 #[inline(always)]
 unsafe fn read(s: &[f32], offset: usize) -> f32x4 {
     #[cfg(target_arch = "aarch64")]
-    return unsafe { std::ptr::read(s.as_ptr().add(offset) as *const f32x4) };
+    return unsafe { std::ptr::read(s.as_ptr().add(offset).cast::<f32x4>()) };
 
     #[cfg(not(target_arch = "aarch64"))]
     return read_safe(s, offset);
@@ -94,8 +94,8 @@ pub fn length(points: &[&[f32]; 2]) -> f32 {
 
     if rem_pairs > 0 {
         let offset = num_chunks * N;
-        let origins = unsafe { [read(&points[0], offset), read(&points[1], offset)] };
-        let destinations = unsafe { [read(&points[0], 1 + offset), read(&points[1], 1 + offset)] };
+        let origins = unsafe { [read(points[0], offset), read(points[1], offset)] };
+        let destinations = unsafe { [read(points[0], 1 + offset), read(points[1], 1 + offset)] };
 
         let mask = f32x4::splat(rem_pairs as f32).cmp_gt(f32x4::new([0., 1., 2., 3.]));
 
