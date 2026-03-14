@@ -324,34 +324,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "geo-ruler"
-version = "0.3.0"
-dependencies = [
- "approx",
- "criterion",
- "geo",
- "num-traits",
- "proptest",
-]
-
-[[package]]
-name = "geo-ruler-python"
-version = "0.1.0"
-dependencies = [
- "geo-ruler",
- "pyo3",
- "pyo3-stub-gen",
-]
-
-[[package]]
-name = "geo-ruler-wasm"
-version = "0.1.0"
-dependencies = [
- "geo-ruler",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "geo-types"
 version = "0.7.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1142,6 +1114,56 @@ dependencies = [
 ]
 
 [[package]]
+name = "ruler"
+version = "0.3.0"
+dependencies = [
+ "approx",
+ "criterion",
+ "num-traits",
+ "proptest",
+]
+
+[[package]]
+name = "ruler-geo"
+version = "0.1.0"
+dependencies = [
+ "approx",
+ "criterion",
+ "geo",
+ "num-traits",
+ "proptest",
+ "ruler",
+]
+
+[[package]]
+name = "ruler-js"
+version = "0.1.0"
+dependencies = [
+ "ruler",
+ "wasm-bindgen",
+]
+
+[[package]]
+name = "ruler-py"
+version = "0.1.0"
+dependencies = [
+ "pyo3",
+ "pyo3-stub-gen",
+ "ruler",
+]
+
+[[package]]
+name = "ruler-simd"
+version = "0.1.0"
+dependencies = [
+ "approx",
+ "criterion",
+ "libm",
+ "ruler",
+ "wide",
+]
+
+[[package]]
 name = "rustc-hash"
 version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1321,17 +1343,6 @@ name = "shlex"
 version = "1.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda2ff0d084019ba4d7c6f371c95d8fd75ce3524c3cb8fb653a3023f6323e64"
-
-[[package]]
-name = "simd-ruler"
-version = "0.1.0"
-dependencies = [
- "approx",
- "criterion",
- "geo-ruler",
- "libm",
- "wide",
-]
 
 [[package]]
 name = "siphasher"

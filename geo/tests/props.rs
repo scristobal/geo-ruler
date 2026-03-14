@@ -1,4 +1,4 @@
-//! Property tests and correctness verification for the `geo_ruler` crate.
+//! Property tests and correctness verification for the `ruler` crate.
 //!
 //! This test suite verifies that the `Ruler` implementation maintains essential mathematical
 //! properties of geodesic calculations (such as symmetry and accuracy).
@@ -12,7 +12,7 @@
 use approx::relative_eq;
 use geo::Geodesic;
 use geo::{Bearing, Destination, Distance, point};
-use geo_ruler::geo::RulerMeasure;
+use ruler_geo::RulerMeasure;
 use proptest::prelude::*;
 
 const RELATIVE_ERROR: f64 = 0.01;

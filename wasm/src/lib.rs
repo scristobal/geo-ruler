@@ -1,6 +1,6 @@
-//! WebAssembly bindings for geo-ruler geodesic calculations.
+//! WebAssembly bindings for ruler geodesic calculations.
 //!
-//! This module provides WebAssembly (WASM) bindings for the geo-ruler library,
+//! This module provides WebAssembly (WASM) bindings for the ruler library,
 //! enabling fast geodesic calculations to be used from JavaScript and other
 //! WebAssembly environments.
 //!
@@ -11,14 +11,14 @@
 //! # Performance
 //!
 //! The WASM bindings use the same fast approximation algorithm as the core
-//! geo-ruler library, providing 20-100x performance improvements over traditional
+//! ruler library, providing 20-100x performance improvements over traditional
 //! geodesic calculations while maintaining typically <0.1% error for city-scale
 //! distances (up to 500 km).
 //!
 //! # JavaScript Usage
 //!
 //! ```javascript
-//! import { Coords } from 'geo-ruler';
+//! import { Coords } from 'ruler';
 //!
 //! // Create coordinate points (Empire State Building and Flatiron Building)
 //! const empireState = new Coords(-73.9857, 40.7484);
@@ -42,7 +42,7 @@
 //! All coordinates use the WGS84 datum with longitude/latitude in decimal degrees.
 //! The `x` field represents longitude and the `y` field represents latitude.
 
-use geo_ruler::CheapRuler;
+use ruler::CheapRuler;
 use wasm_bindgen::prelude::*;
 
 /// A geographic coordinate point with longitude and latitude.

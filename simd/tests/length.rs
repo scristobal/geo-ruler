@@ -1,6 +1,6 @@
 use approx::assert_relative_eq;
-use geo_ruler::CheapRuler;
-use simd_ruler;
+use ruler::CheapRuler;
+use ruler_simd;
 
 const RELATIVE_ERROR: f32 = 0.01;
 
@@ -15,7 +15,7 @@ fn test_simd_length_basic() {
 
     let points = [&lons[..], &lats[..]];
 
-    let simd_length = simd_ruler::length(&points);
+    let simd_length = ruler_simd::length(&points);
 
     let ruler = CheapRuler::WGS84();
 

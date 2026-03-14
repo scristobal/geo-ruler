@@ -1,6 +1,6 @@
-# geo-ruler-wasm
+# ruler-js
 
-WebAssembly bindings for the [geo-ruler](https://github.com/scristobal/geo-ruler) geodesic calculations library.
+WebAssembly bindings for the [ruler](https://github.com/scristobal/geo-ruler) geodesic calculations library.
 
 Provides a `Coords` class for fast city-scale distance, bearing, and destination calculations from JavaScript using the Cheap Ruler approximation algorithm with the WGS84 ellipsoid.
 
@@ -14,7 +14,7 @@ wasm-pack build --target web --out-dir pkg
 ## Usage
 
 ```javascript
-import init, { Coords } from './pkg/geo_ruler_wasm.js';
+import init, { Coords } from './pkg/ruler_js.js';
 
 async function main() {
     await init();

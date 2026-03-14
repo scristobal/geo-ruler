@@ -1,6 +1,6 @@
 //! # Constants Module
 //!
-//! This module defines mathematical and geodetic constants used throughout the geo-ruler library.
+//! This module defines mathematical and geodetic constants used throughout the ruler library.
 //! These constants are primarily related to the WGS84 (World Geodetic System 1984) ellipsoid,
 //! which is the reference coordinate system used by GPS and many mapping applications.
 

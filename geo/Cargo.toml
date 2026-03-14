@@ -1,0 +1,33 @@
+[package]
+name = "ruler-geo"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["rlib"]
+
+[[example]]
+name = "distance"
+
+[[example]]
+name = "interpolate"
+
+[[example]]
+name = "mars"
+
+[[test]]
+name = "props"
+
+[[bench]]
+name = "geo"
+harness = false
+
+[dependencies]
+ruler.workspace = true
+geo = { version = "0.30.0", default-features = false }
+num-traits = { version = "0.2.19", default-features = false, features = ["libm"] }
+
+[dev-dependencies]
+approx = "0.5.1"
+criterion = "0.5.1"
+proptest = "1.7.0"

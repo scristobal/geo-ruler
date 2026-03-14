@@ -1,4 +1,4 @@
-//! Performance benchmarks for the geo-ruler crate.
+//! Performance benchmarks for the ruler-geo crate.
 //!
 //! Compares performance against other geodesic calculation
 //! methods for common operations at city-scale distances.
@@ -6,7 +6,7 @@
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
 use geo::InterpolatePoint;
 use geo::{Bearing, Destination, Distance, Geodesic, Haversine, Rhumb, point};
-use geo_ruler::geo::RulerMeasure;
+use ruler_geo::RulerMeasure;
 
 macro_rules! bench_distance {
     ($group:ident, $label:expr, $measure:expr, $origin:expr, $destination:expr) => {{

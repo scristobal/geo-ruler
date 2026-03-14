@@ -1,5 +1,5 @@
 [package]
-name = "geo-ruler"
+name = "ruler"
 version = "0.3.0"
 edition = "2024"
 description = "A fast, city-scale geodesic approximation library based on Mapbox's Cheap Ruler algorithm."
@@ -13,31 +13,9 @@ readme = "../README.md"
 [lib]
 crate-type = ["rlib"]
 
-[[example]]
-name = "distance"
-required-features = ["geo"]
-
-[[example]]
-name = "interpolate"
-required-features = ["geo"]
-
-[[example]]
-name = "mars"
-required-features = ["geo"]
-
-
-[[test]]
-name = "props"
-required-features = ["geo"]
-
 [[bench]]
 name = "ruler"
 harness = false
-
-[[bench]]
-name = "geo"
-harness = false
-required-features = ["geo"]
 
 [[bench]]
 name = "math"
@@ -46,7 +24,6 @@ required-features = ["atan2_deg3"]
 
 [dependencies]
 num-traits = { version = "0.2.19", default-features = false, features = ["libm"] }
-geo = { version = "0.30.0", optional = true, default-features = false }
 
 [dev-dependencies]
 approx = "0.5.1"
@@ -54,7 +31,6 @@ criterion = "0.5.1"
 proptest = "1.7.0"
 
 [features]
-default = ["geo", "atan2_deg3", "std"]
+default = ["atan2_deg3", "std"]
 std = ["num-traits/std"]
-geo = ["dep:geo", "std"] # When enabled, include geo.rs trait implementations (requires std)
 atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan

@@ -1,6 +1,6 @@
 use criterion::{Criterion, criterion_group, criterion_main};
-use geo_ruler::CheapRuler;
-use simd_ruler;
+use ruler::CheapRuler;
+use ruler_simd;
 use std::hint::black_box;
 
 fn generate_test_data(size: usize) -> Vec<[f32; 2]> {
@@ -34,7 +34,7 @@ pub fn benchmark(c: &mut Criterion) {
     let points = [&lats[..], &lons[..]];
 
     g.bench_with_input("length", &points, |b, points| {
-        b.iter(|| simd_ruler::length(black_box(points)))
+        b.iter(|| ruler_simd::length(black_box(points)))
     });
 
     g.finish();

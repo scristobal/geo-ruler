@@ -1,6 +1,6 @@
-//! Python bindings for geo-ruler geodesic calculations.
+//! Python bindings for ruler geodesic calculations.
 //!
-//! This module provides Python bindings for the geo-ruler library,
+//! This module provides Python bindings for the ruler library,
 //! enabling fast geodesic calculations to be used from Python.
 //!
 //! The Python interface is designed to be simple and efficient, providing a
@@ -10,7 +10,7 @@
 //! # Performance
 //!
 //! The Python bindings use the same fast approximation algorithm as the core
-//! geo-ruler library, providing 20-100x performance improvements over traditional
+//! ruler library, providing 20-100x performance improvements over traditional
 //! geodesic calculations while maintaining typically <0.1% error for city-scale
 //! distances (up to 500 km).
 //!
@@ -41,7 +41,7 @@
 //! All coordinates use the WGS84 datum with longitude/latitude in decimal degrees.
 //! The `x` field represents longitude and the `y` field represents latitude.
 
-use ::geo_ruler::CheapRuler;
+use ::ruler::CheapRuler;
 use pyo3::prelude::*;
 use pyo3_stub_gen::derive::{gen_stub_pyclass, gen_stub_pymethods};
 use pyo3_stub_gen::define_stub_info_gatherer;

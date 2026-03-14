@@ -2,7 +2,7 @@
 //! along a line between two landmarks in New York City using the Ruler.
 
 use geo::{InterpolatePoint, point};
-use geo_ruler::geo::RulerMeasure;
+use ruler_geo::RulerMeasure;
 
 fn main() {
     // Define our two landmarks in New York City (longitude, latitude in degrees)

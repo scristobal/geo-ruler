@@ -2,7 +2,7 @@
 //!
 
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
-use geo_ruler::math;
+use ruler::math;
 
 pub fn benchmark_atan2_f64(c: &mut Criterion) {
     let mut group = c.benchmark_group("atan2_f64");

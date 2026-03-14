@@ -1,6 +1,6 @@
-# geo-ruler-python
+# ruler-py
 
-Python bindings for the [geo-ruler](https://github.com/scristobal/geo-ruler) geodesic calculations library.
+Python bindings for the [ruler](https://github.com/scristobal/geo-ruler) geodesic calculations library.
 
 Provides a `Coords` class for fast city-scale distance, bearing, and destination calculations from Python using the Cheap Ruler approximation algorithm with the WGS84 ellipsoid.
 

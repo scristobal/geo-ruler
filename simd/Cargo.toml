@@ -1,5 +1,5 @@
 [package]
-name = "simd-ruler"
+name = "ruler-simd"
 version = "0.1.0"
 edition = "2024"
 
@@ -18,7 +18,7 @@ wide = { version = "0.7.33", default-features = false }
 libm = { version = "0.2", default-features = false, features = ["arch"] }
 
 [dev-dependencies]
-geo-ruler = { workspace = true, default-features = true }
+ruler = { workspace = true, default-features = true }
 criterion = "0.5.1"
 approx = "0.5.1"
 

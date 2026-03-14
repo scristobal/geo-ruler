@@ -15,7 +15,7 @@
 //!
 //! ```
 //! use geo::{point, Bearing, Distance, Destination};
-//! use geo_ruler::geo::RulerMeasure;
+//! use ruler_geo::RulerMeasure;
 //!
 //! // Create two points (Empire State Building and Flatiron Building)
 //! let empire_state = point!(x: -73.9857, y: 40.7484);
@@ -35,15 +35,7 @@
 //!
 //! # Feature Flags
 //!
-//! This module requires the `geo` feature (enabled by default), which implies `std`.
-//!
-//! Additionally, alternative `atan2` implementations can be enabled:
-//!
-//! - `atan2_deg3`: Use a 3rd degree polynomial approximation (faster but less accurate)
-//!
-//! Without `atan2_deg3`, Rust's default `atan2` implementation is used.
-
-use crate::{CheapRuler, MaybeFromf32};
+use ruler::{CheapRuler, MaybeFromf32};
 use geo::{Bearing, CoordFloat, Destination, Distance, InterpolatePoint, Point, point};
 use num_traits::FloatConst;
 
@@ -73,7 +65,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> RulerMeasure<F> {
     ///
     /// ```
     /// use geo::{point, Distance};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// // Mars has different dimensions than Earth
     /// let mars_equatorial_radius = 3_396_200.0; // meters
@@ -101,7 +93,7 @@ impl<F: CoordFloat + FloatConst + From<f32>> RulerMeasure<F> {
     ///
     /// ```
     /// use geo::{point, Distance};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484);
     /// let flatiron = point!(x: -73.9897, y: 40.7411);
@@ -143,7 +135,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> Destination<F> for RulerMeasure<
     ///
     /// ```
     /// use geo::{point, Destination};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484); // Empire State Building
     /// let distance = 100.0; // 100 meters
@@ -182,7 +174,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> Distance<F, Point<F>, Point<F>>
     ///
     /// ```
     /// use geo::{point, Distance};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484); // Empire State Building
     /// let flatiron = point!(x: -73.9897, y: 40.7411);  // Flatiron Building
@@ -220,7 +212,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> Bearing<F> for RulerMeasure<F> {
     ///
     /// ```
     /// use geo::{point, Bearing};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484); // Empire State Building
     /// let flatiron = point!(x: -73.9897, y: 40.7411);  // Flatiron Building
@@ -261,7 +253,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> InterpolatePoint<F> for RulerMea
     ///
     /// ```
     /// use geo::{point, InterpolatePoint};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484); // Empire State Building
     /// let flatiron = point!(x: -73.9897, y: 40.7411);  // Flatiron Building
@@ -303,7 +295,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> InterpolatePoint<F> for RulerMea
     ///
     /// ```
     /// use geo::{point, InterpolatePoint};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484); // Empire State Building
     /// let flatiron = point!(x: -73.9897, y: 40.7411);  // Flatiron Building
@@ -345,7 +337,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> InterpolatePoint<F> for RulerMea
     ///
     /// ```
     /// use geo::{point, InterpolatePoint};
-    /// use geo_ruler::geo::RulerMeasure;
+    /// use ruler_geo::RulerMeasure;
     ///
     /// let empire_state = point!(x: -73.9857, y: 40.7484); // Empire State Building
     /// let flatiron = point!(x: -73.9897, y: 40.7411);  // Flatiron Building

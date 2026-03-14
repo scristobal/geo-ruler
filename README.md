@@ -1,8 +1,8 @@
-# Geo Ruler
+# Ruler
 
-A fast, city-scale geodesic approximation library for [geo-rs](https://docs.rs/geo/latest/geo/) based on [Mapbox's Cheap Ruler algorithm](https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016).
+A fast, city-scale geodesic approximation library based on [Mapbox's Cheap Ruler algorithm](https://blog.mapbox.com/fast-geodesic-approximations-with-cheap-ruler-106f229ad016).
 
-This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#metric-spaces) (namely `Geodesic`, `Haversine` and `Rhumb`) with a new `RulerMeasure` measure that prioritizes performance over precision while maintaining acceptable accuracy for most city-scale applications.
+The `ruler-geo` crate extends the existing [geo-rs](https://docs.rs/geo/latest/geo/) [metric spaces](https://docs.rs/geo/latest/geo/#metric-spaces) (namely `Geodesic`, `Haversine` and `Rhumb`) with a new `RulerMeasure` measure that prioritizes performance over precision while maintaining acceptable accuracy for most city-scale applications.
 
 ## Features
 
@@ -11,10 +11,10 @@ This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#
 - Local formulas use the [WGS84 ellipsoidal model](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS_84), but also support other elliptical models, such as GRS80, or even other celestial bodies
 - Different approximate algorithms for `atan2` computations can be optionally enabled using cargo features
 - Comprehensive test suite, property invariants, and correctness verification against [Karney (2013) Geodesic model](https://arxiv.org/pdf/1109.4448.pdf) using fuzz testing
-- No heap allocations and `#![no_std]` compatible. The `geo` feature (enabled by default) implies `std`
-- Optional WebAssembly bindings via the `geo-ruler-wasm` crate
-- Optional Python bindings via the `geo-ruler-python` crate (built with [maturin](https://www.maturin.rs/))
-- Experimental `simd-ruler` crate with SIMD-accelerated implementations of common aggregated geodesic operations, eg. length of a polyline.
+- No heap allocations and `#![no_std]` compatible
+- Optional WebAssembly bindings via the `ruler-js` crate
+- Optional Python bindings via the `ruler-py` crate (built with [maturin](https://www.maturin.rs/))
+- Experimental `ruler-simd` crate with SIMD-accelerated implementations of common aggregated geodesic operations, eg. length of a polyline.
 
 ## Examples
 
@@ -24,7 +24,7 @@ Calculate distance between two landmarks:
 
 ```rust
 use geo::{point, Distance};
-use geo_ruler::geo::RulerMeasure;
+use ruler_geo::RulerMeasure;
 
 fn main() {
     let empire_state = point!(x: -73.9857, y: 40.7484);
@@ -41,7 +41,7 @@ Generate points along a path:
 
 ```rust
 use geo::{point, InterpolatePoint};
-use geo_ruler::geo::RulerMeasure;
+use ruler_geo::RulerMeasure;
 
 fn main() {
     let empire_state = point!(x: -73.9857, y: 40.7484);
@@ -58,7 +58,7 @@ fn main() {
 
 ### From JavaScript using WebAssembly
 
-The `geo-ruler-wasm` crate provides WebAssembly bindings. Build with [wasm-pack](https://rustwasm.github.io/wasm-pack/):
+The `ruler-js` crate provides WebAssembly bindings. Build with [wasm-pack](https://rustwasm.github.io/wasm-pack/):
 
 ```bash
 cargo install wasm-pack
@@ -68,7 +68,7 @@ wasm-pack build wasm/ --target web --out-dir pkg
 Then use it in your JavaScript code:
 
 ```javascript
-import init, { Coords } from './pkg/geo_ruler_wasm.js';
+import init, { Coords } from './pkg/ruler_js.js';
 
 async function main() {
     await init();
@@ -91,7 +91,7 @@ main();
 
 ### From Python
 
-The `geo-ruler-python` crate provides Python bindings. Build with [maturin](https://www.maturin.rs/):
+The `ruler-py` crate provides Python bindings. Build with [maturin](https://www.maturin.rs/):
 
 ```bash
 pip install maturin
@@ -155,7 +155,7 @@ This approach is significantly faster than traditional methods like Haversine or
 
 ### Integration with geo-rs
 
-This library extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by implementing the following traits:
+The `ruler-geo` crate extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by implementing the following traits:
 
 - [`Distance`](https://docs.rs/geo/latest/geo/algorithm/line_measures/trait.Distance.html)
 - [`Bearing`](https://docs.rs/geo/latest/geo/algorithm/line_measures/trait.Bearing.html)
@@ -166,22 +166,22 @@ This library extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by 
 
 | Crate | Description |
 |-------|-------------|
-| `ruler/` | Core library (`geo-ruler`) |
-| `simd/` | SIMD-accelerated operations (`simd-ruler`) |
-| `wasm/` | WebAssembly bindings (`geo-ruler-wasm`) |
-| `python/` | Python bindings (`geo-ruler-python`) |
+| `ruler/` | Core library (`ruler`) |
+| `geo/` | Integration with the [geo-rs](https://docs.rs/geo/latest/geo/) crate (`ruler-geo`) |
+| `simd/` | SIMD-accelerated operations (`ruler-simd`) |
+| `wasm/` | WebAssembly bindings (`ruler-js`) |
+| `python/` | Python bindings (`ruler-py`) |
 
 ### Cargo Features
 
 - **`std`**: Enable standard library support (enabled by default)
-- **`geo`**: Integration with the geo-rs crate ecosystem (enabled by default, implies `std`)
 - **`atan2_deg3`**: Use a very fast and inaccurate 3rd degree polynomial approximation of `atan2` (enabled by default)
 
-The core crate is `#![no_std]` compatible. For embedded or `no_std` environments, use:
+The core `ruler` crate is `#![no_std]` compatible. For embedded or `no_std` environments, use:
 
 ```toml
 [dependencies]
-geo-ruler = { version = "0.3.0", default-features = false }
+ruler = { version = "0.3.0", default-features = false }
 ```
 
 Note: When `atan2_deg3` is not enabled, Rust's default `atan2` implementation is used.

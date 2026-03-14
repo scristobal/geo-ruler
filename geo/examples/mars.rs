@@ -2,7 +2,7 @@
 //! using the fast Ruler implementation, which is optimized for city-scale distances.
 
 use geo::{Distance, point};
-use geo_ruler::geo::RulerMeasure;
+use ruler_geo::RulerMeasure;
 
 fn main() {
     // Define our two landmarks on Mars (longitude, latitude in degrees)

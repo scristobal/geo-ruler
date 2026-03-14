@@ -1,16 +1,16 @@
 [package]
-name = "geo-ruler-python"
+name = "ruler-py"
 version = "0.1.0"
 edition = "2024"
 
 [lib]
-name = "geo_ruler_python"
+name = "ruler_py"
 crate-type = ["cdylib", "rlib"]
 
 [[bin]]
 name = "stub_gen"
 
 [dependencies]
-geo-ruler.workspace = true
+ruler.workspace = true
 pyo3 = { version = "0.28", features = ["extension-module"] }
 pyo3-stub-gen = "0.19"

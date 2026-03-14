@@ -14,7 +14,7 @@
 //! Basic distance calculation:
 //!
 //! ```
-//! use geo_ruler::CheapRuler;
+//! use ruler::CheapRuler;
 //!
 //! let ruler = CheapRuler::<f64>::WGS84();
 //! let empire_state = [-73.9857, 40.7484];
@@ -27,7 +27,6 @@
 //! # Feature Flags
 //!
 //! - `std`: Enable standard library support (enabled by default)
-//! - `geo`: Integration with the geo-rs crate ecosystem (implies `std`)
 //! - `atan2_deg3`: Use 3rd degree polynomial approximation for `atan2` (faster)
 //!
 //! The core crate is `#![no_std]` compatible. Use `default-features = false` for embedded or
@@ -39,9 +38,6 @@ mod constants;
 
 #[cfg(feature = "atan2_deg3")]
 pub mod math;
-
-#[cfg(feature = "geo")]
-pub mod geo;
 
 use constants::{WGS84_E2, WGS84_RE};
 use core::convert::From;

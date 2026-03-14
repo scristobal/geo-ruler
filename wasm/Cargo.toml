@@ -1,5 +1,5 @@
 [package]
-name = "geo-ruler-wasm"
+name = "ruler-js"
 version = "0.1.0"
 edition = "2024"
 
@@ -7,5 +7,5 @@ edition = "2024"
 crate-type = ["cdylib"]
 
 [dependencies]
-geo-ruler.workspace = true
+ruler.workspace = true
 wasm-bindgen = "0.2.100"

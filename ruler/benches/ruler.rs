@@ -2,7 +2,7 @@
 //!
 
 use criterion::{Criterion, black_box, criterion_group, criterion_main};
-use geo_ruler::CheapRuler;
+use ruler::CheapRuler;
 
 pub fn benchmark(c: &mut Criterion) {
     let mut g = c.benchmark_group("cheap-ruler");

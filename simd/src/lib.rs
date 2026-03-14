@@ -1,4 +1,4 @@
-//! # geo-ruler-simd
+//! # ruler-simd
 //!
 //! High-performance, limited accuracy, SIMD-accelerated geographic calculations.
 //!
@@ -71,7 +71,7 @@ fn read_safe(s: &[f32], offset: usize) -> f32x4 {
 /// Returns the total length in meters.
 ///
 /// ```rust
-/// # use simd_ruler::length;
+/// # use ruler_simd::length;
 /// let lons = [-73.9857, -73.9897, -73.9927];
 /// let lats = [40.7484, 40.7411, 40.7394];
 ///
