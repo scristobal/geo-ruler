@@ -7,7 +7,7 @@
 //!
 //! # Feature Flags
 //!
-//! - `std`: Enable standard library support and use platform math via `wide/std` (opt-in).
+//! - `std`: Enable standard library support and use platform math via `wide/std` (enabled by default).
 //!   Without `std`, scalar math falls back to `libm`.
 
 #![no_std]

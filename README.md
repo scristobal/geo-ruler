@@ -144,7 +144,7 @@ This library extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by 
 
 ### Cargo Features
 
-- **`std`**: Enable standard library support (enabled by default via `geo`)
+- **`std`**: Enable standard library support (enabled by default)
 - **`geo`**: Integration with the geo-rs crate ecosystem (enabled by default, implies `std`)
 - **`wasm`**: WebAssembly bindings for JavaScript interop (enabled by default)
 - **`atan2_deg3`**: Use a very fast and inaccurate 3rd degree polynomial approximation of `atan2` (enabled by default)

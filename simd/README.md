@@ -39,7 +39,7 @@ let distance = length(&points); // Returns meters
 
 ### Cargo Features
 
-- **`std`**: Enable standard library support and use platform math via `wide/std` (opt-in). Without it, scalar math falls back to `libm`.
+- **`std`**: Enable standard library support and use platform math via `wide/std` (enabled by default). Without it, scalar math falls back to `libm`.
 
 ## Installation
 
@@ -50,11 +50,11 @@ Add this to your `Cargo.toml`:
 simd-ruler = "0.1.0"
 ```
 
-To enable `std` for faster platform math:
+For `no_std` environments, disable default features:
 
 ```toml
 [dependencies]
-simd-ruler = { version = "0.1.0", features = ["std"] }
+simd-ruler = { version = "0.1.0", default-features = false }
 ```
 
 ## License

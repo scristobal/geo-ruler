@@ -48,18 +48,17 @@ harness = false
 required-features = ["atan2_deg3"]
 
 [dependencies]
-geo = { version = "0.30.0", optional = true }
 num-traits = { version = "0.2.19", default-features = false, features = ["libm"] }
-wasm-bindgen = { version = "0.2.100", optional = true }
+geo = { version = "0.30.0", optional = true, default-features = false }
+wasm-bindgen = { version = "0.2.100", optional = true, default-features = false }
 
 [dev-dependencies]
 approx = "0.5.1"
 criterion = "0.5.1"
 proptest = "1.7.0"
 
-
 [features]
-default = ["geo", "wasm", "atan2_deg3"]
+default = ["geo", "wasm", "atan2_deg3", "std"]
 std = ["num-traits/std"]
 wasm = ["dep:wasm-bindgen"] # When enabled, generate Web Assembly bindings
 geo = ["dep:geo", "std"] # When enabled, include geo.rs trait implementations (requires std)

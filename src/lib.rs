@@ -26,7 +26,7 @@
 //!
 //! # Feature Flags
 //!
-//! - `std`: Enable standard library support (enabled by default via `geo`)
+//! - `std`: Enable standard library support (enabled by default)
 //! - `geo`: Integration with the geo-rs crate ecosystem (implies `std`)
 //! - `wasm`: WebAssembly bindings for JavaScript interop
 //! - `atan2_deg3`: Use 3rd degree polynomial approximation for `atan2` (faster)
