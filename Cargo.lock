@@ -812,6 +812,7 @@ dependencies = [
  "approx",
  "criterion",
  "geo-ruler",
+ "libm",
  "wide",
 ]
 

@@ -11,7 +11,7 @@ This crate extends the existing [metric spaces](https://docs.rs/geo/latest/geo/#
 - Local formulas use the [WGS84 ellipsoidal model](https://en.wikipedia.org/wiki/World_Geodetic_System#WGS_84), but also support other elliptical models, such as GRS80, or even other celestial bodies
 - Different approximate algorithms for `atan2` computations can be optionally enabled using cargo features
 - Comprehensive test suite, property invariants, and correctness verification against [Karney (2013) Geodesic model](https://arxiv.org/pdf/1109.4448.pdf) using fuzz testing
-- No heap allocations and `#![no_std]`. However, the [geo](https://crates.io/crates/geo) crate does require `std`
+- No heap allocations and `#![no_std]` compatible. The `geo` feature (enabled by default) implies `std`
 - Optional WebAssembly bindings for use from JavaScript
 - Experimental `simd-ruler` crate with SIMD-accelerated implementations of common aggregated geodesic operations, eg. length of a polyline.
 
@@ -64,7 +64,7 @@ This library includes WebAssembly bindings, if the `wasm` feature is enabled. To
 cargo install wasm-pack
 
 # Build the WebAssembly module
-wasm-pack build --target web --out-dir pkg
+wasm-pack build --target web --out-dir pkg --crate-type cdylib
 ```
 
 Then use it in your JavaScript code:
@@ -144,11 +144,17 @@ This library extends the [geo-rs](https://docs.rs/geo/latest/geo/) ecosystem by 
 
 ### Cargo Features
 
-This library supports multiple implementations of the `atan2` function to calculate bearing and additional features:
-
-- **`geo`**: Integration with the geo-rs crate ecosystem (enabled by default)
+- **`std`**: Enable standard library support (enabled by default via `geo`)
+- **`geo`**: Integration with the geo-rs crate ecosystem (enabled by default, implies `std`)
 - **`wasm`**: WebAssembly bindings for JavaScript interop (enabled by default)
 - **`atan2_deg3`**: Use a very fast and inaccurate 3rd degree polynomial approximation of `atan2` (enabled by default)
+
+The core crate is `#![no_std]` compatible. For embedded or `no_std` environments, use:
+
+```toml
+[dependencies]
+geo-ruler = { version = "0.3.0", default-features = false }
+```
 
 Note: When `atan2_deg3` is not enabled, Rust's default `atan2` implementation is used.
 

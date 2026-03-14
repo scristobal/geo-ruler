@@ -8,7 +8,8 @@ A vectorized geospatial library that processes multiple coordinate pairs simulta
 
 - **SIMD Vectorization**: Processes multiple coordinate pairs simultaneously using the `wide` crate
 - **Cross-platform**: Works on stable Rust across different architectures
-- **Minimal Dependencies**: Uses only the `wide` crate for SIMD operations
+- **`#![no_std]`**: No standard library dependency, falls back to `libm` for scalar math
+- **Minimal Dependencies**: Uses only the `wide` and `libm` crates
 
 ## Requirements
 
@@ -36,6 +37,10 @@ let points = [&longitudes[..], &latitudes[..]];
 let distance = length(&points); // Returns meters
 ```
 
+### Cargo Features
+
+- **`std`**: Enable standard library support and use platform math via `wide/std` (opt-in). Without it, scalar math falls back to `libm`.
+
 ## Installation
 
 Add this to your `Cargo.toml`:
@@ -43,6 +48,13 @@ Add this to your `Cargo.toml`:
 ```toml
 [dependencies]
 simd-ruler = "0.1.0"
+```
+
+To enable `std` for faster platform math:
+
+```toml
+[dependencies]
+simd-ruler = { version = "0.1.0", features = ["std"] }
 ```
 
 ## License

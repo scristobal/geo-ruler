@@ -35,11 +35,13 @@
 //!
 //! # Feature Flags
 //!
-//! This crate provides optional feature flags to use alternative `atan2` implementations:
+//! This module requires the `geo` feature (enabled by default), which implies `std`.
+//!
+//! Additionally, alternative `atan2` implementations can be enabled:
 //!
 //! - `atan2_deg3`: Use a 3rd degree polynomial approximation (faster but less accurate)
 //!
-//! Without any features, Rust's default `atan2` implementation is used.
+//! Without `atan2_deg3`, Rust's default `atan2` implementation is used.
 
 use crate::{CheapRuler, MaybeFromf32};
 use geo::{Bearing, CoordFloat, Destination, Distance, InterpolatePoint, Point, point};

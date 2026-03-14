@@ -18,6 +18,10 @@ geo-ruler = { path = ".."}
 criterion = "0.5.1"
 approx = "0.5.1"
 
+[features]
+std = ["wide/std"]
+
 [dependencies]
-wide = "0.7.33"
+wide = { version = "0.7.33", default-features = false }
+libm = "0.2"
 

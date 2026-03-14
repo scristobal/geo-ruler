@@ -4,6 +4,13 @@
 //!
 //! Provides vectorized implementations of geospatial operations processing multiple
 //! coordinate pairs simultaneously with an ellipsoidal Earth model.
+//!
+//! # Feature Flags
+//!
+//! - `std`: Enable standard library support and use platform math via `wide/std` (opt-in).
+//!   Without `std`, scalar math falls back to `libm`.
+
+#![no_std]
 
 use core::f32::consts::{FRAC_PI_2, FRAC_PI_4, PI};
 use wide::{CmpGt, CmpLt, f32x4};
@@ -31,7 +38,7 @@ where
 #[inline(always)]
 unsafe fn read(s: &[f32], offset: usize) -> f32x4 {
     #[cfg(target_arch = "aarch64")]
-    return unsafe { std::ptr::read(s.as_ptr().add(offset).cast::<f32x4>()) };
+    return unsafe { core::ptr::read(s.as_ptr().add(offset).cast::<f32x4>()) };
 
     #[cfg(not(target_arch = "aarch64"))]
     return read_safe(s, offset);
@@ -124,7 +131,10 @@ fn destination(origin: &[f32x4; 2], bearing: &f32, distance: &f32) -> [f32x4; 2]
 
     let distance = f32x4::splat(*distance);
 
+    #[cfg(feature = "std")]
     let (sin, cos) = bearing.to_radians().sin_cos();
+    #[cfg(not(feature = "std"))]
+    let (sin, cos) = libm::sincosf(bearing.to_radians());
 
     let x = origin[0] + distance * f32x4::splat(sin) / kx;
     let y = origin[1] + distance * f32x4::splat(cos) / ky;
