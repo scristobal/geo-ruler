@@ -38,7 +38,6 @@
 //! This crate provides optional feature flags to use alternative `atan2` implementations:
 //!
 //! - `atan2_deg3`: Use a 3rd degree polynomial approximation (faster but less accurate)
-//! - `atan2_deg5`: Use a 5th degree polynomial approximation (better accuracy with slight performance cost)
 //!
 //! Without any features, Rust's default `atan2` implementation is used.
 
@@ -233,7 +232,7 @@ impl<F: CoordFloat + FloatConst + MaybeFromf32> Bearing<F> for RulerMeasure<F> {
     /// # Feature Flags
     ///
     /// The implementation used depends on the feature flags enabled:
-    /// - With `atan2_deg3` or `atan2_deg5`: Uses the optimized implementation from the `atan` module
+    /// - With `atan2_deg3`: Uses the optimized implementation from the `atan` module
     /// - Without features: Uses Rust's default `atan2` implementation
     fn bearing(&self, origin: Point<F>, destination: Point<F>) -> F {
         self.0.bearing(&origin.into(), &destination.into())

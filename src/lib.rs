@@ -29,7 +29,6 @@
 //! - `geo`: Integration with the geo-rs crate ecosystem
 //! - `wasm`: WebAssembly bindings for JavaScript interop
 //! - `atan2_deg3`: Use 3rd degree polynomial approximation for `atan2` (faster)
-//! - `atan2_deg5`: Use 5th degree polynomial approximation for `atan2` (more accurate)
 
 #![no_std]
 
@@ -38,7 +37,7 @@ mod constants;
 #[cfg(feature = "wasm")]
 mod wasm;
 
-#[cfg(any(feature = "atan2_deg3", feature = "atan2_deg5"))]
+#[cfg(feature = "atan2_deg3")]
 pub mod math;
 
 #[cfg(feature = "geo")]
@@ -167,16 +166,16 @@ impl<T: Float + FloatConst + Debug> CheapRuler<T> {
 ///
 /// This trait is used to conditionally require `From<f32>` when using alternative
 /// `atan2` implementations that need to work with f32 constants.
-#[cfg(any(feature = "atan2_deg5", feature = "atan2_deg3"))]
+#[cfg(feature = "atan2_deg3")]
 pub trait MaybeFromf32: From<f32> {}
 
 /// Trait for types that may implement `From<f32>` depending on feature flags.
-#[cfg(not(any(feature = "atan2_deg5", feature = "atan2_deg3")))]
+#[cfg(not(feature = "atan2_deg3"))]
 pub trait MaybeFromf32 {}
 
-#[cfg(any(feature = "atan2_deg5", feature = "atan2_deg3"))]
+#[cfg(feature = "atan2_deg3")]
 impl<T: From<f32>> MaybeFromf32 for T {}
-#[cfg(not(any(feature = "atan2_deg5", feature = "atan2_deg3")))]
+#[cfg(not(feature = "atan2_deg3"))]
 impl<T> MaybeFromf32 for T {}
 
 impl<T: Float + FloatConst + Debug + MaybeFromf32> CheapRuler<T> {
@@ -199,10 +198,10 @@ impl<T: Float + FloatConst + Debug + MaybeFromf32> CheapRuler<T> {
         let dx = (destination[0] - origin[0]) * kx;
         let dy = (destination[1] - origin[1]) * ky;
 
-        #[cfg(not(any(feature = "atan2_deg3", feature = "atan2_deg5")))]
+        #[cfg(not(feature = "atan2_deg3"))]
         return dx.atan2(dy).to_degrees();
 
-        #[cfg(any(feature = "atan2_deg5", feature = "atan2_deg3"))]
+        #[cfg(feature = "atan2_deg3")]
         return math::atan2(dx, dy).to_degrees();
     }
 }

@@ -63,4 +63,3 @@ default = ["geo", "wasm", "atan2_deg3"]
 wasm = ["dep:wasm-bindgen"] # When enabled, generate Web Assembly bindings
 geo = ["dep:geo"] # When enabled, include geo.rs trait implementations
 atan2_deg3 = []  # When enabled, use a very fast and inaccurate degree 3 polynomial approximation of atan
-atan2_deg5 = []  # When enabled, use a fast and less accurate degree 5 polynomial approximation of atan

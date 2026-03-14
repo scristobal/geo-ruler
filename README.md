@@ -102,16 +102,16 @@ Geo Ruler is optimized for high performance at the cost of accuracy, especially 
 
 Below are benchmark results comparing Geo Ruler against the other geo-rs implementations:
 
-| Operation            | RulerMeasure (atan2_deg3) | RulerMeasure (atan2_deg5) | RulerMeasure (default) | Geodesic   | Haversine | Rhumb     |
-|----------------------|---------------------------|---------------------------|------------------------|------------|-----------|-----------|
-| Distance             | 6.17 ns                   | 6.19 ns                   | 6.17 ns                | 402.61 ns  | 16.35 ns  | 21.31 ns  |
-| Bearing              | 8.51 ns                   | 10.30 ns                  | 19.79 ns               | 405.20 ns  | 25.06 ns  | 31.38 ns  |
-| Destination          | 9.14 ns                   | 9.12 ns                   | 9.11 ns                | 206.43 ns  | 48.95 ns  | 33.21 ns  |
-| Interpolate Distance | 25.57 ns                  | 28.52 ns                  | 37.08 ns               | 629.54 ns  | 84.33 ns  | 90.63 ns  |
-| Interpolate Ratio    | 0.96 ns                   | 0.96 ns                   | 0.99 ns                | 647.79 ns  | 90.97 ns  | 89.71 ns  |
-| Interpolate Along    | 10.85 ns                  | 10.85 ns                  | 10.85 ns               | 2160.50 ns | 349.33 ns | 348.23 ns |
+| Operation            | RulerMeasure (atan2_deg3) | RulerMeasure (default) | Geodesic   | Haversine | Rhumb     |
+|----------------------|---------------------------|------------------------|------------|-----------|-----------|
+| Distance             | 6.17 ns                   | 6.17 ns                | 402.61 ns  | 16.35 ns  | 21.31 ns  |
+| Bearing              | 8.51 ns                   | 19.79 ns               | 405.20 ns  | 25.06 ns  | 31.38 ns  |
+| Destination          | 9.14 ns                   | 9.11 ns                | 206.43 ns  | 48.95 ns  | 33.21 ns  |
+| Interpolate Distance | 25.57 ns                  | 37.08 ns               | 629.54 ns  | 84.33 ns  | 90.63 ns  |
+| Interpolate Ratio    | 0.96 ns                   | 0.99 ns                | 647.79 ns  | 90.97 ns  | 89.71 ns  |
+| Interpolate Along    | 10.85 ns                  | 10.85 ns               | 2160.50 ns | 349.33 ns | 348.23 ns |
 
-Note: `default` refers to Rust's default `atan2` implementation (when neither `atan2_deg3` nor `atan2_deg5` features are enabled), whilst `atan2_deg3` and `atan2_deg5` refer to the polynomial approximations provided by this crate. See the [Cargo Features](#cargo-features) section for more details on these options.
+Note: `default` refers to Rust's default `atan2` implementation (when `atan2_deg3` is not enabled), whilst `atan2_deg3` refers to the polynomial approximation provided by this crate. See the [Cargo Features](#cargo-features) section for more details on these options.
 
 ### Warning
 
@@ -149,9 +149,8 @@ This library supports multiple implementations of the `atan2` function to calcul
 - **`geo`**: Integration with the geo-rs crate ecosystem (enabled by default)
 - **`wasm`**: WebAssembly bindings for JavaScript interop (enabled by default)
 - **`atan2_deg3`**: Use a very fast and inaccurate 3rd degree polynomial approximation of `atan2` (enabled by default)
-- **`atan2_deg5`**: Use a fast and less accurate 5th degree polynomial approximation of `atan2`
 
-Note: When neither `atan2_deg3` nor `atan2_deg5` is enabled, Rust's default `atan2` implementation is used.
+Note: When `atan2_deg3` is not enabled, Rust's default `atan2` implementation is used.
 
 ### Limitations
 
