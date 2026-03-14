@@ -28,7 +28,6 @@
 //!
 //! - `std`: Enable standard library support (enabled by default)
 //! - `geo`: Integration with the geo-rs crate ecosystem (implies `std`)
-//! - `wasm`: WebAssembly bindings for JavaScript interop
 //! - `atan2_deg3`: Use 3rd degree polynomial approximation for `atan2` (faster)
 //!
 //! The core crate is `#![no_std]` compatible. Use `default-features = false` for embedded or
@@ -37,9 +36,6 @@
 #![no_std]
 
 mod constants;
-
-#[cfg(feature = "wasm")]
-mod wasm;
 
 #[cfg(feature = "atan2_deg3")]
 pub mod math;

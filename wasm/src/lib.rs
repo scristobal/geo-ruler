@@ -37,16 +37,12 @@
 //! console.log(`Destination: ${destination.x}, ${destination.y}`);
 //! ```
 //!
-//! # Feature Flag
-//!
-//! This module is available when the `wasm` feature flag is enabled.
-//!
 //! # Coordinate System
 //!
 //! All coordinates use the WGS84 datum with longitude/latitude in decimal degrees.
 //! The `x` field represents longitude and the `y` field represents latitude.
 
-use crate::CheapRuler;
+use geo_ruler::CheapRuler;
 use wasm_bindgen::prelude::*;
 
 /// A geographic coordinate point with longitude and latitude.
