@@ -24,10 +24,10 @@ harness = false
 
 [dependencies]
 ruler.workspace = true
-geo = { version = "0.30.0", default-features = false }
+geo = { version = "0.32.0", default-features = false }
 num-traits = { version = "0.2.19", default-features = false, features = ["libm"] }
 
 [dev-dependencies]
 approx = "0.5.1"
 divan = "0.1"
-proptest = "1.7.0"
+proptest = "1.10.0"

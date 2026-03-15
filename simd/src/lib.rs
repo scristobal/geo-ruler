@@ -104,7 +104,7 @@ pub fn length(points: &[&[f32]; 2]) -> f32 {
         let origins = unsafe { [read(points[0], offset), read(points[1], offset)] };
         let destinations = unsafe { [read(points[0], 1 + offset), read(points[1], 1 + offset)] };
 
-        let mask = f32x4::splat(rem_pairs as f32).cmp_gt(f32x4::new([0., 1., 2., 3.]));
+        let mask = f32x4::splat(rem_pairs as f32).simd_gt(f32x4::new([0., 1., 2., 3.]));
 
         total_length += mask
             .blend(distance(&origins, &destinations), f32x4::splat(0.))
@@ -163,29 +163,29 @@ fn atan2(y: f32x4, x: f32x4) -> f32x4 {
     let res = f32x4::splat(FRAC_PI_4);
     let r = (x - abs_y) / (x + abs_y);
 
-    let mask = x.cmp_lt(f32x4::splat(0.));
+    let mask = x.simd_lt(f32x4::splat(0.));
 
     let mut res = mask.blend(res + f32x4::splat(FRAC_PI_2), res);
     let r = mask.blend(f32x4::splat(-1.) / r, r);
 
     res += r * (a1 + a3 * r * r);
 
-    let mask = y.cmp_lt(f32x4::splat(0.));
+    let mask = y.simd_lt(f32x4::splat(0.));
     mask.blend(-res, res)
 }
 
 #[inline(always)]
 fn cos(mut x: f32x4) -> f32x4 {
     // reduce to [0, 2π) using periodicity
-    let mut mask = x.cmp_lt(f32x4::splat(0.));
+    let mut mask = x.simd_lt(f32x4::splat(0.));
     x = mask.blend(x + f32x4::splat(2. * PI), x);
 
     // reduce to [0, π/2] using symmetry
-    mask = x.cmp_gt(f32x4::splat(PI));
+    mask = x.simd_gt(f32x4::splat(PI));
     x = mask.blend(x - f32x4::splat(PI), x);
     let mut sign = mask.blend(f32x4::splat(1.), f32x4::splat(-1.));
 
-    mask = x.cmp_gt(f32x4::splat(FRAC_PI_2));
+    mask = x.simd_gt(f32x4::splat(FRAC_PI_2));
     x = mask.blend(f32x4::splat(PI) - x, x);
     sign = mask.blend(-sign, sign);
 

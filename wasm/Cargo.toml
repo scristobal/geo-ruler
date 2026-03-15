@@ -8,4 +8,4 @@ crate-type = ["cdylib"]
 
 [dependencies]
 ruler.workspace = true
-wasm-bindgen = "0.2.100"
+wasm-bindgen = "0.2.114"

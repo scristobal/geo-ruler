@@ -14,7 +14,7 @@ harness = false
 name = "length"
 
 [dependencies]
-wide = { version = "0.7.33", default-features = false }
+wide = { version = "1.2.0", default-features = false }
 libm = { version = "0.2", default-features = false, features = ["arch"] }
 
 [dev-dependencies]
