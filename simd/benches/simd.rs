@@ -1,7 +1,9 @@
-use criterion::{Criterion, criterion_group, criterion_main};
+use divan::black_box;
 use ruler::CheapRuler;
-use ruler_simd;
-use std::hint::black_box;
+
+fn main() {
+    divan::main();
+}
 
 fn generate_test_data(size: usize) -> Vec<[f32; 2]> {
     let ruler = CheapRuler::WGS84();
@@ -22,32 +24,34 @@ fn generate_test_data(size: usize) -> Vec<[f32; 2]> {
     points
 }
 
-pub fn benchmark(c: &mut Criterion) {
-    // prime number of data points, not divisible by any number of lanes
-    let data = generate_test_data(1019);
+mod simd {
+    use super::*;
 
-    let mut g = c.benchmark_group("simd");
+    #[divan::bench]
+    fn length(bencher: divan::Bencher) {
+        // prime number of data points, not divisible by any number of lanes
+        let data = generate_test_data(1019);
 
-    let lats: Vec<f32> = data.iter().map(|p| p[0]).collect();
-    let lons: Vec<f32> = data.iter().map(|p| p[1]).collect();
+        let lats: Vec<f32> = data.iter().map(|p| p[0]).collect();
+        let lons: Vec<f32> = data.iter().map(|p| p[1]).collect();
 
-    let points = [&lats[..], &lons[..]];
+        let points = [&lats[..], &lons[..]];
 
-    g.bench_with_input("length", &points, |b, points| {
-        b.iter(|| ruler_simd::length(black_box(points)))
-    });
+        bencher.bench_local(|| ruler_simd::length(black_box(&points)));
+    }
+}
 
-    g.finish();
+mod iter {
+    use super::*;
 
-    let mut g = c.benchmark_group("iter");
+    #[divan::bench]
+    fn length(bencher: divan::Bencher) {
+        let data = generate_test_data(1019);
+        let points: Vec<&[f32; 2]> = data.iter().collect();
+        let ruler = CheapRuler::WGS84();
 
-    let points: Vec<&[f32; 2]> = data.iter().collect();
-
-    let ruler = CheapRuler::WGS84();
-
-    g.bench_with_input("length", &points, |b, points| {
-        b.iter(|| {
-            let points = black_box(points);
+        bencher.bench_local(|| {
+            let points = black_box(&points);
             let mut distance = 0.;
 
             for i in 1..points.len() {
@@ -55,11 +59,6 @@ pub fn benchmark(c: &mut Criterion) {
             }
 
             distance
-        })
-    });
-
-    g.finish();
+        });
+    }
 }
-
-criterion_group!(benches, benchmark);
-criterion_main!(benches);

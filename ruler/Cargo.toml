@@ -27,7 +27,7 @@ num-traits = { version = "0.2.19", default-features = false, features = ["libm"]
 
 [dev-dependencies]
 approx = "0.5.1"
-criterion = "0.5.1"
+divan = "0.1"
 proptest = "1.7.0"
 
 [features]

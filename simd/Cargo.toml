@@ -19,7 +19,7 @@ libm = { version = "0.2", default-features = false, features = ["arch"] }
 
 [dev-dependencies]
 ruler = { workspace = true, default-features = true }
-criterion = "0.5.1"
+divan = "0.1"
 approx = "0.5.1"
 
 [features]
